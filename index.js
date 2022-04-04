@@ -10,7 +10,7 @@ async function Start(Port = 1234, Name = "Ap2aDev",  Debug = false, SplashScreen
         AppSecret: "TestNonoXSecret",
         MongoUrl: "mongodb://localhost:27017",
         Debug: Debug,
-        IconPath:  __dirname + "/Frontend/Icon/apple-icon-192x192.png",
+        IconPath:  __dirname + "/Backend/Icon/apple-icon-192x192.png",
         ApiServer: true,
         AllowSignUp: false,
         AppPath: "",
@@ -25,7 +25,7 @@ async function Start(Port = 1234, Name = "Ap2aDev",  Debug = false, SplashScreen
             ColorIconMenuBar: "black",
             HeightMenuBar: "3rem",
             AppFolderClient: __dirname + "/Frontend/App",
-            //AppFolderAdmin: __dirname + "/Frontend/Admin",
+            AppFolderAdmin: __dirname + "/Frontend/Admin",
             UseAppModule: true
         }
     }
