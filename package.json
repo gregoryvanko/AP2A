@@ -1,0 +1,28 @@
+{
+  "name": "@gregvanko/ap2a",
+  "version": "1.0.0",
+  "description": "Ap2a",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon —inspect exemple.js",
+    "up": "npm version minor && npm publish && git push",
+    "vanko": "ssh root@vanko.be -p 9922"
+  },
+  "nodemonConfig": {
+    "ext": "css, js",
+    "delay": "5000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gregoryvanko/AP2A.git"
+  },
+  "author": "gregvanko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gregoryvanko/AP2A/issues"
+  },
+  "homepage": "https://github.com/gregoryvanko/AP2A#readme",
+  "dependencies": {
+    "@gregvanko/nanox": "^1.39.0"
+  }
+}
