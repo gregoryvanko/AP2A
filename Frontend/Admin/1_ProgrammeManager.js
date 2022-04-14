@@ -37,6 +37,9 @@ class ProgrammeManager {
         NanoXAddMenuButtonRight("Add", "Add", IconAction.AddProgramme(NanoXGetColorIconMenuBar()), this.ClickAddProgramme.bind(this))
     }
 
+    /**
+     * Construit le popup permettant de choisir le type de programme a ajouter
+     */
     BuildAddProgrammeChoiceView(){
         // Conteneur du popup
         let conteneur = NanoXBuild.DivFlexColumn()
@@ -46,24 +49,29 @@ class ProgrammeManager {
         let DivButtonTypeOfProgramme = NanoXBuild.DivFlexRowSpaceAround()
         conteneur. appendChild(DivButtonTypeOfProgramme)
         // Boutton Tenue
-        let BouttonTenueContener = NanoXBuild.DivFlexColumn(null, null, "width: 6rem;")
-        let BouttonTenueImage = NanoXBuild.DivFlexColumn(null, null, "height: 6rem; margin-bottom: 1rem;")
-        BouttonTenueImage.innerHTML = IconAction.Tenue()
-        BouttonTenueContener.appendChild(BouttonTenueImage)
-        BouttonTenueContener.appendChild(NanoXBuild.DivText("Tenue", null, "Text", null))
-        let bouttonTenue = NanoXBuild.Button(BouttonTenueContener.outerHTML, this.ClickAddProgrammeTenue.bind(this), null, "Button MarginButton")
-        DivButtonTypeOfProgramme.appendChild(bouttonTenue)
+        DivButtonTypeOfProgramme.appendChild(this.BuildButtonTypeOfProgramme("Tenue", IconAction.Tenue(), this.ClickAddProgrammeTenue.bind(this)))
         // Boutton COD
-        let BouttonCodContener = NanoXBuild.DivFlexColumn(null, null, "width: 6rem;")
-        let BouttonCodImage = NanoXBuild.DivFlexColumn(null, null, "height: 6rem; margin-bottom: 1rem;")
-        BouttonCodImage.innerHTML = IconAction.Cod()
-        BouttonCodContener.appendChild(BouttonCodImage)
-        BouttonCodContener.appendChild(NanoXBuild.DivText("COD", null, "Text", null))
-        let bouttonCod = NanoXBuild.Button(BouttonCodContener.outerHTML, this.ClickAddProgrammeCod.bind(this), null, "Button MarginButton")
-        DivButtonTypeOfProgramme.appendChild(bouttonCod)
+        DivButtonTypeOfProgramme.appendChild(this.BuildButtonTypeOfProgramme("COD", IconAction.Cod(), this.ClickAddProgrammeCod.bind(this)))
 
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
+    }
+
+    /**
+     * Construit un boutton sous forme d'image et de texte
+     * @param {String} Titre Titre du boutton
+     * @param {SVG} Svg Image du boutton en SVG
+     * @param {Function} Action Action a effectuer sur le click du boutton
+     * @returns HtmlElement Boutton
+     */
+    BuildButtonTypeOfProgramme(Titre = "Titre", Svg = null, Action = null){
+        let BouttonTenueContener = NanoXBuild.DivFlexColumn(null, null, "width: 6rem;")
+        let BouttonTenueImage = NanoXBuild.DivFlexColumn(null, null, "height: 6rem; margin-bottom: 1rem;")
+        BouttonTenueImage.innerHTML = Svg
+        BouttonTenueContener.appendChild(BouttonTenueImage)
+        BouttonTenueContener.appendChild(NanoXBuild.DivText(Titre, null, "Text", null))
+        let bouttonTenue = NanoXBuild.Button(BouttonTenueContener.outerHTML, Action, null, "Button MarginButton")
+        return bouttonTenue
     }
 
     /**
@@ -78,7 +86,7 @@ class ProgrammeManager {
      */
     ClickAddProgrammeTenue(){
         NanoXBuild.PopupDelete()
-        console.log("ToDo")
+        console.log("ToDo Tenue")
     }
 
     /**
@@ -86,7 +94,7 @@ class ProgrammeManager {
      */
     ClickAddProgrammeCod(){
         NanoXBuild.PopupDelete()
-        console.log("ToDo")
+        console.log("ToDo COD")
     }
 }
 
