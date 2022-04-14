@@ -10,7 +10,7 @@
   },
   "nodemonConfig": {
     "ext": "css, js",
-    "delay": "5000"
+    "delay": "500"
   },
   "repository": {
     "type": "git",
