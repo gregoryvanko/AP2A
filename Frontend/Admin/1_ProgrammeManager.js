@@ -2,6 +2,9 @@ class ProgrammeManager {
     constructor(){
         this._DivApp = NanoXGetDivApp()
 
+        this._MonthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"]
+        this._MonthCurrent = null
+        this._YearCurrent = null
     }
 
     /**
@@ -10,37 +13,76 @@ class ProgrammeManager {
     Initiation(){
         // Clear view
         this._DivApp.innerHTML=""
+        // Set DivApp With
+        this._DivApp.style.width = "90%"
+        this._DivApp.style.maxWidth = "60rem"
         // Build start view
-        this.BuildStartview()
+        this.BuildViewMonthlyProgramme()
     }
 
     /**
-     * Construit la vue de depart
+     * Efface les button action dans la barre de menu
      */
-    BuildStartview(){
-        // Clear view
-        this._DivApp.innerHTML=""
-        // Add Action Button
-        this.BuildActionButton()
-        // Add Titre
-        this._DivApp.appendChild(NanoXBuild.DivText("Programme Manager", null, "Titre MarginTitre"))
+    ClearActionButton(){
+        // On efface les bouttons existants a gauche et a droite
+        NanoXClearMenuButtonLeft()
+        NanoXClearMenuButtonRight()
     }
 
     /**
      * Ajoute les button action dans la barre de menu
      */
     BuildActionButton(){
-        // On efface les bouttons existants a gauche et a droite
-        NanoXClearMenuButtonLeft()
-        NanoXClearMenuButtonRight()
         // Ajout du boutton Add programme
         NanoXAddMenuButtonRight("Add", "Add", IconAction.AddProgramme(NanoXGetColorIconMenuBar()), this.ClickAddProgramme.bind(this))
     }
 
     /**
+     * Construit la vue qui liste le programme d'un mois
+     */
+    BuildViewMonthlyProgramme(Mois = null, Annee = null){
+        // Clear Action Button
+        this.ClearActionButton()
+        // Add Action Button
+        this.BuildActionButton()
+        // Clear view
+        this._DivApp.innerHTML=""
+        // Add Titre
+        this._DivApp.appendChild(NanoXBuild.DivText("Programme Manager", null, "Titre MarginTitre"))
+        // Calcule du mois et annee
+        let MonthToShow = "Month Error"
+        let YearToShow = "Year Error"
+        if (Mois == null){
+            const d = new Date()
+            MonthToShow = this._MonthNames[d.getMonth()]
+            this._MonthCurrent = d.getMonth() + 1
+        } else {
+            MonthToShow = this._MonthNames[Mois -1]
+            this._MonthCurrent = Mois
+        }
+        if (Annee == null){
+            const d = new Date()
+            YearToShow = d.getFullYear()
+        } else {
+            YearToShow = Annee
+        }
+        this._YearCurrent = YearToShow
+        // Month Selector
+        let ConteneurMonth = NanoXBuild.DivFlexRowStart(null, null, "margin-bottom: 1rem; width: 100%;")
+        this._DivApp.appendChild(ConteneurMonth)
+        ConteneurMonth.appendChild(NanoXBuild.Button(IconAction.Previous(), this.ClickMonthPrevious.bind(this), null, "ButtonRond", "margin: 0.5rem; padding: 0.2rem; width: 1.5rem;"))
+        ConteneurMonth.appendChild(NanoXBuild.DivText(MonthToShow + " " + YearToShow, null, "Text", "width: 9rem; text-align: center;"))
+        ConteneurMonth.appendChild(NanoXBuild.Button(IconAction.Next(), this.ClicklMonthNext.bind(this), null, "ButtonRond", "margin: 0.5rem; padding: 0.2rem; width: 1.5rem;"))
+        // Waiting Data
+        this._DivApp.appendChild(NanoXBuild.DivText("Waiting Data...", "WaitingData", "Text"))
+        // Call api get programme
+        // ToDo
+    }
+
+    /**
      * Construit le popup permettant de choisir le type de programme a ajouter
      */
-    BuildAddProgrammeChoiceView(){
+    BuildViewAddProgrammeChoice(){
         // Conteneur du popup
         let conteneur = NanoXBuild.DivFlexColumn()
         // Titre du popup
@@ -55,6 +97,44 @@ class ProgrammeManager {
 
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
+    }
+
+    /**
+     * Construit la vue qui permet de créer une nouvelle tenue dans le programme
+     */
+    BuildViewNewTenue(){
+        // Clear Action Button
+        this.ClearActionButton()
+        // Clear view
+        this._DivApp.innerHTML=""
+        // Add Titre
+        this._DivApp.appendChild(NanoXBuild.DivText("Nouvelle Tenue", null, "Titre MarginTitre"))
+        // ToDo
+
+        // Save and Cancel
+        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%;")
+        this._DivApp.appendChild(ConteneurAction)
+        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeSave.bind(this), null, "Button MarginButton", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton", "width: 6rem;"))
+    }
+
+    /**
+     * Construit la vue qui permet de créer une nouvelle COD dans le programme
+     */
+    BuildViewNewCod(){
+        // Clear Action Button
+        this.ClearActionButton()
+        // Clear view
+        this._DivApp.innerHTML=""
+        // Add Titre
+        this._DivApp.appendChild(NanoXBuild.DivText("Nouvelle COD", null, "Titre MarginTitre"))
+        // ToDo
+
+        // Save and Cancel
+        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%;")
+        this._DivApp.appendChild(ConteneurAction)
+        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeSave.bind(this), null, "Button MarginButton", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton", "width: 6rem;"))
     }
 
     /**
@@ -78,7 +158,7 @@ class ProgrammeManager {
      * Click on action button "Add programme"
      */
     ClickAddProgramme(){
-        this.BuildAddProgrammeChoiceView()
+        this.BuildViewAddProgrammeChoice()
     }
 
     /**
@@ -86,7 +166,7 @@ class ProgrammeManager {
      */
     ClickAddProgrammeTenue(){
         NanoXBuild.PopupDelete()
-        console.log("ToDo Tenue")
+        this.BuildViewNewTenue()
     }
 
     /**
@@ -94,7 +174,45 @@ class ProgrammeManager {
      */
     ClickAddProgrammeCod(){
         NanoXBuild.PopupDelete()
-        console.log("ToDo COD")
+        this.BuildViewNewCod()
+    }
+
+    /**
+     * Click sur le boutton pour reculer d'un mois
+     */
+    ClickMonthPrevious(){
+        let NewMonth = this._MonthCurrent - 1
+        if (NewMonth <= 0){
+            NewMonth = 12
+            this._YearCurrent -= 1
+        }
+        this.BuildViewMonthlyProgramme(NewMonth, this._YearCurrent)
+    }
+
+    /**
+     * Click sur le boutton pour avancer d'un mois
+     */
+    ClicklMonthNext(){
+        let NewMonth = this._MonthCurrent + 1
+        if (NewMonth >= 13){
+            NewMonth = 1
+            this._YearCurrent += 1
+        }
+        this.BuildViewMonthlyProgramme(NewMonth, this._YearCurrent)
+    }
+
+    /**
+     * Click sur le boutton pour sauver un nouveau programme
+     */
+    ClickNewProgrammeSave(){
+        alert("ToDo")
+    }
+
+    /**
+     * Click sur le boutton pour faire un cancel d'un nouveau programme
+     */
+    ClickNewProgrammeCancel(){
+        this.BuildViewMonthlyProgramme(this._MonthCurrent, this._YearCurrent)
     }
 }
 
