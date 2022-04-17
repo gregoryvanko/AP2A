@@ -114,8 +114,8 @@ class ProgrammeManager {
         // Save and Cancel
         let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%;")
         this._DivApp.appendChild(ConteneurAction)
-        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeSave.bind(this), null, "Button MarginButton", "width: 6rem;"))
-        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeSave.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
     }
 
     /**
@@ -133,8 +133,8 @@ class ProgrammeManager {
         // Save and Cancel
         let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%;")
         this._DivApp.appendChild(ConteneurAction)
-        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeSave.bind(this), null, "Button MarginButton", "width: 6rem;"))
-        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeSave.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
     }
 
     /**
