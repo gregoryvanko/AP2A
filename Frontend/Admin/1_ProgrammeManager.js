@@ -109,12 +109,12 @@ class ProgrammeManager {
         this._DivApp.innerHTML=""
         // Add Titre
         this._DivApp.appendChild(NanoXBuild.DivText("Nouvelle Tenue", null, "Titre MarginTitre"))
-        // ToDo
-
+        // Add Tenu vue
+        this._DivApp.appendChild(ProgrammeBuilder.ViewNewProgrammeTenue())
         // Save and Cancel
-        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%;")
+        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%; margin-top: 1rem;")
         this._DivApp.appendChild(ConteneurAction)
-        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeSave.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeTenueSave.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
         ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
     }
 
@@ -128,12 +128,12 @@ class ProgrammeManager {
         this._DivApp.innerHTML=""
         // Add Titre
         this._DivApp.appendChild(NanoXBuild.DivText("Nouvelle COD", null, "Titre MarginTitre"))
-        // ToDo
-
+        // Add COD vue
+        this._DivApp.appendChild(ProgrammeBuilder.ViewNewProgrammeCod())
         // Save and Cancel
-        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%;")
+        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%; margin-top: 1rem;")
         this._DivApp.appendChild(ConteneurAction)
-        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeSave.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeCodSave.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
         ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
     }
 
@@ -202,10 +202,17 @@ class ProgrammeManager {
     }
 
     /**
-     * Click sur le boutton pour sauver un nouveau programme
+     * Click sur le boutton pour sauver un nouveau programme Tenue
      */
-    ClickNewProgrammeSave(){
-        alert("ToDo")
+    ClickNewProgrammeTenueSave(){
+        // ToDo
+    }
+
+    /**
+     * Click sur le boutton pour sauver un nouveau programme COD
+     */
+    ClickNewProgrammeCodSave(){
+        // ToDo
     }
 
     /**
