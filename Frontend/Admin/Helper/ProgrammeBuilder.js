@@ -8,6 +8,7 @@ class ProgrammeBuilder {
         conteneur.appendChild(DivDate)
         DivDate.appendChild(NanoXBuild.DivText("Date de la Tenue:", null, "Text InputLabelWidth", ""))
         let InputDate = NanoXBuild.Input(InDate, "text", "InputDate", "", "InputDate", "Input Text", "width: 10rem;")
+        InputDate.setAttribute("inputmode","none")
         DivDate.appendChild(InputDate)
         // https://mymth.github.io/vanillajs-datepicker
         const datepicker = new Datepicker(InputDate, {
@@ -30,6 +31,7 @@ class ProgrammeBuilder {
         DivTemple.appendChild(NanoXBuild.DivText("Temple:", null, "Text InputLabelWidth", ""))
         let inputtemple = NanoXBuild.Input(InTemple, "text", "InputTemple", "", "InputTemple", "Input Text", "width: 10rem")
         inputtemple.autocomplete = "off"
+        inputtemple.setAttribute("inputmode","none")
         DivTemple.appendChild(inputtemple)
         autocomplete({
             input: inputtemple,
@@ -71,6 +73,7 @@ class ProgrammeBuilder {
         DivRite.appendChild(NanoXBuild.DivText("Rite:", null, "Text InputLabelWidth", ""))
         let inputrite = NanoXBuild.Input(InRite, "text", "InputRite", "", "InputRite", "Input Text", "width: 10rem")
         inputrite.autocomplete = "off"
+        inputrite.setAttribute("inputmode","none")
         DivRite.appendChild(inputrite)
         autocomplete({
             input: inputrite,
@@ -112,6 +115,7 @@ class ProgrammeBuilder {
         DivRepas.appendChild(NanoXBuild.DivText("Repas:", null, "Text InputLabelWidth", ""))
         let inputrepas = NanoXBuild.Input(InRepas, "text", "InputRepas", "", "InputRepas", "Input Text", "width: 10rem")
         inputrepas.autocomplete = "off"
+        inputrepas.setAttribute("inputmode","none")
         DivRepas.appendChild(inputrepas)
         autocomplete({
             input: inputrepas,
