@@ -107,10 +107,8 @@ class ProgrammeManager {
         this.ClearActionButton()
         // Clear view
         this._DivApp.innerHTML=""
-        // Add Titre
-        this._DivApp.appendChild(NanoXBuild.DivText("Nouvelle Tenue", null, "Titre MarginTitre"))
         // Add Tenu vue
-        let ProgBuilder = new ProgrammeBuilder(this.ClickNewProgrammeTenueSave.bind(this), this.ClickNewProgrammeCancel.bind(this))
+        let ProgBuilder = new ProgrammeBuilder(this.ClickNewProgrammeCancel.bind(this))
         this._DivApp.appendChild(ProgBuilder.ViewNewProgrammeTenue())
     }
 
@@ -122,10 +120,8 @@ class ProgrammeManager {
         this.ClearActionButton()
         // Clear view
         this._DivApp.innerHTML=""
-        // Add Titre
-        this._DivApp.appendChild(NanoXBuild.DivText("Nouvelle COD", null, "Titre MarginTitre"))
         // Add COD vue
-        let ProgBuilder = new ProgrammeBuilder(this.ClickNewProgrammeCodSave.bind(this), this.ClickNewProgrammeCancel.bind(this))
+        let ProgBuilder = new ProgrammeBuilder(this.ClickNewProgrammeCancel.bind(this))
         this._DivApp.appendChild(ProgBuilder.ViewNewProgrammeCod())
     }
 
@@ -191,22 +187,6 @@ class ProgrammeManager {
             this._YearCurrent += 1
         }
         this.BuildViewMonthlyProgramme(NewMonth, this._YearCurrent)
-    }
-
-    /**
-     * Click sur le boutton pour sauver un nouveau programme Tenue
-     */
-    ClickNewProgrammeTenueSave(Data){
-        // ToDo
-        alert(Data)
-    }
-
-    /**
-     * Click sur le boutton pour sauver un nouveau programme COD
-     */
-    ClickNewProgrammeCodSave(Data){
-        // ToDo
-        alert(Data)
     }
 
     /**

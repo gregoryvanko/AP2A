@@ -1,6 +1,5 @@
 class ProgrammeBuilder {
-    constructor(ButtonActionNew, ButtonActionCancel){
-        this._ButtonActionNew = ButtonActionNew
+    constructor(ButtonActionCancel){
         this._ButtonActionCancel = ButtonActionCancel
 
         this._OrdreDuJour = []
@@ -9,6 +8,8 @@ class ProgrammeBuilder {
     ViewNewProgrammeTenue({InDate="", InConge=false, InTemple="", InRite="", InRepas="", InSeminaireType="", InSeminaireLocal="", InOrdreDuJour = []}={}){
         this._OrdreDuJour = InOrdreDuJour
         let conteneur = NanoXBuild.Div(null, null, "display: flex; flex-direction: column; width:100%;")
+        // Add Titre
+        conteneur.appendChild(NanoXBuild.DivText("Nouvelle Tenue", null, "Titre MarginTitre", "text-align: center;"))
         // Date de la tenue
         let DivDate = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem;") 
         conteneur.appendChild(DivDate)
@@ -123,6 +124,8 @@ class ProgrammeBuilder {
 
     ViewNewProgrammeCod(){
         let conteneur = NanoXBuild.DivFlexColumn(null, null, "width: 100%;")
+        // Add Titre
+        conteneur.appendChild(NanoXBuild.DivText("Nouvelle COD", null, "Titre MarginTitre", "text-align: center;"))
         // ToDo
 
         // Save Cancel boutton
@@ -134,10 +137,12 @@ class ProgrammeBuilder {
     }
 
     ClickSaveTenue(){
-        this._ButtonActionNew("Save Tenue")
+        alert("Save Tenue")
+        this._ButtonActionCancel()
     }
 
     ClickSaveCod(){
-        this._ButtonActionNew("Save COD")
+        alert("Save COD")
+        this._ButtonActionCancel()
     }
 }
