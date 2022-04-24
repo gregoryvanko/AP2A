@@ -110,12 +110,8 @@ class ProgrammeManager {
         // Add Titre
         this._DivApp.appendChild(NanoXBuild.DivText("Nouvelle Tenue", null, "Titre MarginTitre"))
         // Add Tenu vue
-        this._DivApp.appendChild(ProgrammeBuilder.ViewNewProgrammeTenue())
-        // Save and Cancel
-        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%; margin-top: 1rem;")
-        this._DivApp.appendChild(ConteneurAction)
-        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeTenueSave.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
-        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        let ProgBuilder = new ProgrammeBuilder(this.ClickNewProgrammeTenueSave.bind(this), this.ClickNewProgrammeCancel.bind(this))
+        this._DivApp.appendChild(ProgBuilder.ViewNewProgrammeTenue())
     }
 
     /**
@@ -129,12 +125,8 @@ class ProgrammeManager {
         // Add Titre
         this._DivApp.appendChild(NanoXBuild.DivText("Nouvelle COD", null, "Titre MarginTitre"))
         // Add COD vue
-        this._DivApp.appendChild(ProgrammeBuilder.ViewNewProgrammeCod())
-        // Save and Cancel
-        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%; margin-top: 1rem;")
-        this._DivApp.appendChild(ConteneurAction)
-        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickNewProgrammeCodSave.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
-        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickNewProgrammeCancel.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        let ProgBuilder = new ProgrammeBuilder(this.ClickNewProgrammeCodSave.bind(this), this.ClickNewProgrammeCancel.bind(this))
+        this._DivApp.appendChild(ProgBuilder.ViewNewProgrammeCod())
     }
 
     /**
@@ -204,15 +196,17 @@ class ProgrammeManager {
     /**
      * Click sur le boutton pour sauver un nouveau programme Tenue
      */
-    ClickNewProgrammeTenueSave(){
+    ClickNewProgrammeTenueSave(Data){
         // ToDo
+        alert(Data)
     }
 
     /**
      * Click sur le boutton pour sauver un nouveau programme COD
      */
-    ClickNewProgrammeCodSave(){
+    ClickNewProgrammeCodSave(Data){
         // ToDo
+        alert(Data)
     }
 
     /**

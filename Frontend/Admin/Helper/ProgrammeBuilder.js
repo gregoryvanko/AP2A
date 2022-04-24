@@ -1,8 +1,14 @@
 class ProgrammeBuilder {
-    constructor(){}
+    constructor(ButtonActionNew, ButtonActionCancel){
+        this._ButtonActionNew = ButtonActionNew
+        this._ButtonActionCancel = ButtonActionCancel
 
-    static ViewNewProgrammeTenue({InDate="", InConge=false, InTemple="", InRite="", InRepas="", InSeminaireType="", InSeminaireLocal=""}={}){
-        let conteneur = NanoXBuild.DivFlexColumn()
+        this._OrdreDuJour = []
+    }
+
+    ViewNewProgrammeTenue({InDate="", InConge=false, InTemple="", InRite="", InRepas="", InSeminaireType="", InSeminaireLocal="", InOrdreDuJour = []}={}){
+        this._OrdreDuJour = InOrdreDuJour
+        let conteneur = NanoXBuild.Div(null, null, "display: flex; flex-direction: column; width:100%;")
         // Date de la tenue
         let DivDate = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem;") 
         conteneur.appendChild(DivDate)
@@ -28,25 +34,39 @@ class ProgrammeBuilder {
         DivToogle.appendChild(NanoXBuild.ToggleSwitch({Id : "Conge", Checked : InConge, OnChange : null, HeightRem : 2}))
         // Temple
         const ListeOfTemple = ["Osiris", "Beauté"]
-        conteneur.appendChild(ProgrammeBuilder.BuildInput("Temple:", "InputTemple", InTemple, ListeOfTemple))
+        conteneur.appendChild(this.BuildInput("Temple:", "InputTemple", InTemple, ListeOfTemple))
         // Rite
         const ListeOfRite = ["Mod", "REAA"]
-        conteneur.appendChild(ProgrammeBuilder.BuildInput("Rite:", "InputRite", InRite, ListeOfRite))
+        conteneur.appendChild(this.BuildInput("Rite:", "InputRite", InRite, ListeOfRite))
         // Repas
         const ListeOfRepas = ["Repas Frat", "Agapes", "Banquet", "Banquet rituel"]
-        conteneur.appendChild(ProgrammeBuilder.BuildInput("Repas:", "InputRepas", InRepas, ListeOfRepas))
+        conteneur.appendChild(this.BuildInput("Repas:", "InputRepas", InRepas, ListeOfRepas))
         // Seminaire type
         const ListeOfTypeSeminaire = ["Pas de séminaire", "Travail", "Instruction"]
-        conteneur.appendChild(ProgrammeBuilder.BuildInput("Type séminaire:", "inputSeminaireType", InSeminaireType, ListeOfTypeSeminaire))
+        conteneur.appendChild(this.BuildInput("Type séminaire:", "inputSeminaireType", InSeminaireType, ListeOfTypeSeminaire))
         // Seminaire local
         const ListeOfLocalSeminaire = ["Lumière"]
-        conteneur.appendChild(ProgrammeBuilder.BuildInput("Local séminaire:", "inputSeminaireLocal", InSeminaireLocal, ListeOfLocalSeminaire))
-        // Ordre du jour
-        // ToDo
+        conteneur.appendChild(this.BuildInput("Local séminaire:", "inputSeminaireLocal", InSeminaireLocal, ListeOfLocalSeminaire))
+        // Ordre du jour ToDo
+        conteneur.appendChild(NanoXBuild.DivText("Ordre du jour:", null, "SousTitre", "width:100%; margin-bottom: 0.5rem;"))
+        let ListeOfOrdreDuJour = NanoXBuild.DivFlexColumn(null, null, "width:100%; margin-bottom: 1rem;")
+        conteneur.appendChild(ListeOfOrdreDuJour)
+        if(this._OrdreDuJour.length == 0){
+            ListeOfOrdreDuJour.appendChild(NanoXBuild.DivText("Pas d'ordre du jour", null, "Text", ""))
+        } else {
+            // Construire la liste de l'ordre du jour
+            this.BuildViewOdjListe()
+        }
+        conteneur.appendChild(NanoXBuild.Button("Add", this.BuildViewOdjTenueChoice.bind(this), null, "Button MarginButton Text", "width: 6rem; margin-left: auto; margin-right: auto;")) 
+        // Save Cancel boutton
+        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%; margin-top: 1rem;")
+        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickSaveTenue.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this._ButtonActionCancel, null, "Button MarginButton Text", "width: 6rem;"))
+        conteneur.appendChild(ConteneurAction)
         return conteneur
     }
 
-    static BuildInput(Titre = "Titre", InputID= "InputId", InitValue = "", ListeOfValue = []){
+    BuildInput(Titre = "Titre", InputID= "InputId", InitValue = "", ListeOfValue = []){
         let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem;") 
         Div.appendChild(NanoXBuild.DivText(Titre, null, "Text InputLabelWidth", ""))
         let Myinput = NanoXBuild.Input(InitValue, "text", InputID, "", InputID, "Input Text", "width: 12rem")
@@ -89,9 +109,35 @@ class ProgrammeBuilder {
         return Div
     }
 
-    static ViewNewProgrammeCod(){
-        let conteneur = NanoXBuild.DivFlexColumn(null, null, "width: 100%;")
+    BuildViewOdjListe(){
+        // ToDo
+    }
 
+    BuildViewOdjTenueChoice(){
+        // Conteneur du popup
+        let conteneur = NanoXBuild.DivFlexRowSpaceAround()
+        // ToDo
+        // Creation du popup
+        NanoXBuild.PopupCreate(conteneur)
+    }
+
+    ViewNewProgrammeCod(){
+        let conteneur = NanoXBuild.DivFlexColumn(null, null, "width: 100%;")
+        // ToDo
+
+        // Save Cancel boutton
+        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%; margin-top: 1rem;")
+        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickSaveCod.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this._ButtonActionCancel, null, "Button MarginButton Text", "width: 6rem;"))
+        conteneur.appendChild(ConteneurAction)
         return conteneur
+    }
+
+    ClickSaveTenue(){
+        this._ButtonActionNew("Save Tenue")
+    }
+
+    ClickSaveCod(){
+        this._ButtonActionNew("Save COD")
     }
 }
