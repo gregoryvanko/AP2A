@@ -91,9 +91,9 @@ class ProgrammeManager {
         let DivButtonTypeOfProgramme = NanoXBuild.DivFlexRowSpaceAround()
         conteneur. appendChild(DivButtonTypeOfProgramme)
         // Boutton Tenue
-        DivButtonTypeOfProgramme.appendChild(this.BuildButtonTypeOfProgramme("Tenue", IconAction.Tenue(), this.ClickAddProgrammeTenue.bind(this)))
+        DivButtonTypeOfProgramme.appendChild(UiComponent.ButtonSvgAndTitre(IconAction.Tenue(), "Tenue", this.ClickAddProgrammeTenue.bind(this)))
         // Boutton COD
-        DivButtonTypeOfProgramme.appendChild(this.BuildButtonTypeOfProgramme("COD", IconAction.Cod(), this.ClickAddProgrammeCod.bind(this)))
+        DivButtonTypeOfProgramme.appendChild(UiComponent.ButtonSvgAndTitre(IconAction.Cod(), "COD", this.ClickAddProgrammeCod.bind(this)))
 
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
@@ -108,7 +108,7 @@ class ProgrammeManager {
         // Clear view
         this._DivApp.innerHTML=""
         // Add Tenu vue
-        let ProgBuilder = new ProgrammeBuilder(this.ClickNewProgrammeCancel.bind(this))
+        let ProgBuilder = new ProgrammeTenueBuilder(this.ClickNewProgrammeCancel.bind(this))
         this._DivApp.appendChild(ProgBuilder.ViewNewProgrammeTenue())
     }
 
@@ -121,25 +121,8 @@ class ProgrammeManager {
         // Clear view
         this._DivApp.innerHTML=""
         // Add COD vue
-        let ProgBuilder = new ProgrammeBuilder(this.ClickNewProgrammeCancel.bind(this))
+        let ProgBuilder = new ProgrammeCodBuilder(this.ClickNewProgrammeCancel.bind(this))
         this._DivApp.appendChild(ProgBuilder.ViewNewProgrammeCod())
-    }
-
-    /**
-     * Construit un boutton sous forme d'image et de texte
-     * @param {String} Titre Titre du boutton
-     * @param {SVG} Svg Image du boutton en SVG
-     * @param {Function} Action Action a effectuer sur le click du boutton
-     * @returns HtmlElement Boutton
-     */
-    BuildButtonTypeOfProgramme(Titre = "Titre", Svg = null, Action = null){
-        let BouttonTenueContener = NanoXBuild.DivFlexColumn(null, null, "width: 6rem;")
-        let BouttonTenueImage = NanoXBuild.DivFlexColumn(null, null, "height: 6rem; margin-bottom: 1rem;")
-        BouttonTenueImage.innerHTML = Svg
-        BouttonTenueContener.appendChild(BouttonTenueImage)
-        BouttonTenueContener.appendChild(NanoXBuild.DivText(Titre, null, "Text", null))
-        let bouttonTenue = NanoXBuild.Button(BouttonTenueContener.outerHTML, Action, null, "Button MarginButton")
-        return bouttonTenue
     }
 
     /**

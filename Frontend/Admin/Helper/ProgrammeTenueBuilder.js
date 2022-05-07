@@ -1,4 +1,4 @@
-class ProgrammeBuilder {
+class ProgrammeTenueBuilder {
     constructor(ButtonActionCancel){
         this._ButtonActionCancel = ButtonActionCancel
 
@@ -116,33 +116,34 @@ class ProgrammeBuilder {
 
     BuildViewOdjTenueChoice(){
         // Conteneur du popup
-        let conteneur = NanoXBuild.DivFlexRowSpaceAround()
+        let conteneur = NanoXBuild.DivFlexColumn()
+        // Titre du popup
+        conteneur.appendChild(NanoXBuild.DivText("Select type of Tenue", null, "SousTitre", "margin-bottom: 1rem;"))
+        // Div horizontale du choix des programme
+        let DivButtonTypeOfTenue = NanoXBuild.DivFlexRowSpaceAround()
+        conteneur. appendChild(DivButtonTypeOfTenue)
+        // Boutton Morcheau Architecture
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.MorceauArchitecture(), "Morceau Architecture", this.ClickAddTenueMorceauArchitecture.bind(this)))
+        // Boutton Administrative
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Administrative(), "Administrative", this.ClickAddTenueAdministrative.bind(this)))
         // ToDo
+        
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
     }
 
-    ViewNewProgrammeCod(){
-        let conteneur = NanoXBuild.DivFlexColumn(null, null, "width: 100%;")
-        // Add Titre
-        conteneur.appendChild(NanoXBuild.DivText("Nouvelle COD", null, "Titre MarginTitre", "text-align: center;"))
-        // ToDo
+    ClickAddTenueMorceauArchitecture(){
+        NanoXBuild.PopupDelete()
+        alert("ToDo")
+    }
 
-        // Save Cancel boutton
-        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%; margin-top: 1rem;")
-        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickSaveCod.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
-        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this._ButtonActionCancel, null, "Button MarginButton Text", "width: 6rem;"))
-        conteneur.appendChild(ConteneurAction)
-        return conteneur
+    ClickAddTenueAdministrative(){
+        NanoXBuild.PopupDelete()
+        alert("ToDo")
     }
 
     ClickSaveTenue(){
-        alert("Save Tenue")
-        this._ButtonActionCancel()
-    }
-
-    ClickSaveCod(){
-        alert("Save COD")
+        alert("Save Tenue") // ToDo
         this._ButtonActionCancel()
     }
 }
