@@ -1,5 +1,8 @@
-const Port = 5000
-const Name = "Ap2aDev"
-const Debug = true 
+const Option = {
+    Port:5000,
+    Name:"Ap2aDev",
+    Debug: true,
+    SplashScreenFilePath: __dirname + "/Frontend/SplashScreen/SplashScreen.html"
+}
 
-require('./index').Start(Port, Name, Debug)
+require('./index').Start(Option)
