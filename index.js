@@ -1,4 +1,4 @@
-async function Start({Port = 1234, Name = "Ap2aDev",  Debug = false, SplashScreenFilePath = null} = {}){
+async function Start({Port = 9000, Name = "Ap2a",  Debug = false, SplashScreenFilePath = null} = {}){
     // Define default SplashScreenFilePath
     if (SplashScreenFilePath == null){SplashScreenFilePath = __dirname + "/Frontend/SplashScreen/SplashScreen.html"}
 
