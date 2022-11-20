@@ -4,6 +4,8 @@ class ProgrammeTenueBuilder {
 
         this._OrdreDuJour = []
         this._TenueGrade = null
+
+        this._Idconteneurinfo = "conteneurinfo"
     }
 
     ViewNewProgrammeTenue({InDate="", InConge=false, InTemple="", InRite="", InRepas="", InSeminaireType="", InSeminaireLocal="", InOrdreDuJour = []}={}){
@@ -33,33 +35,38 @@ class ProgrammeTenueBuilder {
         DivConge.appendChild(NanoXBuild.DivText("En congé:", null, "Text InputLabelWidth", ""))
         let DivToogle = NanoXBuild.DivFlexRowEnd(null, null, "width: 12rem;")
         DivConge.appendChild(DivToogle)
-        DivToogle.appendChild(NanoXBuild.ToggleSwitch({Id : "Conge", Checked : InConge, OnChange : null, HeightRem : 2}))
+        DivToogle.appendChild(NanoXBuild.ToggleSwitch({Id : "Conge", Checked : InConge, OnChange : this.OnChangeToogleConge.bind(this), HeightRem : 2}))
+        
+        // Div info agenda
+        let conteneurinfo = NanoXBuild.Div(this._Idconteneurinfo, null, "display: flex; flex-direction: column; width:100%;")
+        conteneur.appendChild(conteneurinfo)
         // Temple
         const ListeOfTemple = ["Osiris", "Beauté"]
-        conteneur.appendChild(UiComponent.InputWithTitreAndListeOfValue("Temple:", "InputTemple", InTemple, ListeOfTemple))
+        conteneurinfo.appendChild(UiComponent.InputWithTitreAndListeOfValue("Temple:", "InputTemple", InTemple, ListeOfTemple))
         // Rite
         const ListeOfRite = ["Mod", "REAA"]
-        conteneur.appendChild(UiComponent.InputWithTitreAndListeOfValue("Rite:", "InputRite", InRite, ListeOfRite))
+        conteneurinfo.appendChild(UiComponent.InputWithTitreAndListeOfValue("Rite:", "InputRite", InRite, ListeOfRite))
         // Repas
         const ListeOfRepas = ["Repas Frat", "Agapes", "Banquet", "Banquet rituel"]
-        conteneur.appendChild(UiComponent.InputWithTitreAndListeOfValue("Repas:", "InputRepas", InRepas, ListeOfRepas))
+        conteneurinfo.appendChild(UiComponent.InputWithTitreAndListeOfValue("Repas:", "InputRepas", InRepas, ListeOfRepas))
         // Seminaire type
         const ListeOfTypeSeminaire = ["Pas de séminaire", "Travail", "Instruction"]
-        conteneur.appendChild(UiComponent.InputWithTitreAndListeOfValue("Type séminaire:", "inputSeminaireType", InSeminaireType, ListeOfTypeSeminaire))
+        conteneurinfo.appendChild(UiComponent.InputWithTitreAndListeOfValue("Type séminaire:", "inputSeminaireType", InSeminaireType, ListeOfTypeSeminaire))
         // Seminaire local
         const ListeOfLocalSeminaire = ["Lumière"]
-        conteneur.appendChild(UiComponent.InputWithTitreAndListeOfValue("Local séminaire:", "inputSeminaireLocal", InSeminaireLocal, ListeOfLocalSeminaire))
+        conteneurinfo.appendChild(UiComponent.InputWithTitreAndListeOfValue("Local séminaire:", "inputSeminaireLocal", InSeminaireLocal, ListeOfLocalSeminaire))
         // Ordre du jour ToDo
-        conteneur.appendChild(NanoXBuild.DivText("Ordre du jour:", null, "SousTitre", "width:100%; margin-bottom: 0.5rem;"))
+        conteneurinfo.appendChild(NanoXBuild.DivText("Ordre du jour:", null, "SousTitre", "width:100%; margin-bottom: 0.5rem;"))
         let ListeOfOrdreDuJour = NanoXBuild.DivFlexColumn(null, null, "width:100%; margin-bottom: 1rem;")
-        conteneur.appendChild(ListeOfOrdreDuJour)
+        conteneurinfo.appendChild(ListeOfOrdreDuJour)
         if(this._OrdreDuJour.length == 0){
             ListeOfOrdreDuJour.appendChild(NanoXBuild.DivText("Pas d'ordre du jour", null, "Text", ""))
         } else {
             // Construire la liste de l'ordre du jour
             this.BuildViewOdjListe()
         }
-        conteneur.appendChild(NanoXBuild.Button("Add", this.BuildViewOdjTenueGrade.bind(this), null, "Button MarginButton Text", "width: 6rem; margin-left: auto; margin-right: auto;")) 
+        // Add Ordre du jour
+        conteneurinfo.appendChild(NanoXBuild.Button("Add", this.BuildViewOdjTenueGrade.bind(this), null, "Button MarginButton Text", "width: 6rem; margin-left: auto; margin-right: auto;")) 
         // Save Cancel boutton
         let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%; margin-top: 1rem;")
         ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickSaveTenue.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
@@ -165,6 +172,15 @@ class ProgrammeTenueBuilder {
 
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
+    }
+
+    OnChangeToogleConge(event){
+        let conteneurinfo = document.getElementById(this._Idconteneurinfo)
+        if (event.target.checked){
+            conteneurinfo.style.display = "none"
+        } else {
+            conteneurinfo.style.display = "flex"
+        }
     }
 
     ClickAddTenueMorceauArchitecture(){

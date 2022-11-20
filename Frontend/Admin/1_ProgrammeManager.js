@@ -27,6 +27,7 @@ class ProgrammeManager {
         // On efface les bouttons existants a gauche et a droite
         NanoXClearMenuButtonLeft()
         NanoXClearMenuButtonRight()
+        NanoXClearMenuButtonSettings()
     }
 
     /**
@@ -34,7 +35,7 @@ class ProgrammeManager {
      */
     BuildActionButton(){
         // Ajout du boutton Add programme
-        NanoXAddMenuButtonRight("Add", "Add", IconAction.AddProgramme(NanoXGetColorIconMenuBar()), this.ClickAddProgramme.bind(this))
+        NanoXAddMenuButtonSettings("Add", "Add", IconAction.AddProgramme(NanoXGetColorIconMenuBar()), this.ClickAddProgramme.bind(this))
     }
 
     /**
@@ -68,7 +69,7 @@ class ProgrammeManager {
         }
         this._YearCurrent = YearToShow
         // Month Selector
-        let ConteneurMonth = NanoXBuild.DivFlexRowStart(null, null, "margin-bottom: 1rem; width: 100%;")
+        let ConteneurMonth = NanoXBuild.DivFlexRowSpaceAround(null, null, "justify-content: center; margin-bottom: 1rem; width: 100%;")
         this._DivApp.appendChild(ConteneurMonth)
         ConteneurMonth.appendChild(NanoXBuild.Button(IconAction.Previous(), this.ClickMonthPrevious.bind(this), null, "ButtonRond", "margin: 0.5rem; padding: 0.2rem; width: 1.5rem;"))
         ConteneurMonth.appendChild(NanoXBuild.DivText(MonthToShow + " " + YearToShow, null, "Text", "width: 9rem; text-align: center;"))
@@ -181,4 +182,4 @@ class ProgrammeManager {
 }
 
 let MyProgrammeManager = new ProgrammeManager()
-NanoXAddModule("Programme", IconModule.ProgrammeManager(), MyProgrammeManager.Initiation.bind(MyProgrammeManager), false)
+NanoXAddModule("Programme", IconModule.ProgrammeManager(), MyProgrammeManager.Initiation.bind(MyProgrammeManager), false, true)
