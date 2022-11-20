@@ -280,6 +280,6 @@ class ProgrammeTenueBuilder {
         }
         NanoXBuild.PopupDelete()
         console.log(this._TenueInfo)
-        //ToDo
+        //ToDo add in liste ordre du jour
     }
 }
