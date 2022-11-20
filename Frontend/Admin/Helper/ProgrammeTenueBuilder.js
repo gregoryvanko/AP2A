@@ -4,20 +4,24 @@ class ProgrammeTenueBuilder {
 
         this._OrdreDuJour = []
         this._TenueGrade = null
+        this._TenueType = null
+        this._TenueNumero = null
+        this._TenueInfo = null
 
         this._Idconteneurinfo = "conteneurinfo"
+        this._Idlisteordredujour = "listeordredujour"
     }
 
-    ViewNewProgrammeTenue({InDate="", InConge=false, InTemple="", InRite="", InRepas="", InSeminaireType="", InSeminaireLocal="", InOrdreDuJour = []}={}){
+    ViewNewProgrammeTenue({InDate="", InConge=false, InTemple="", InRite="", InRepas="", InSeminaireType="", InSeminaireLocal="", InOrdreDuJour = [], InPublish = false}={}){
         this._OrdreDuJour = InOrdreDuJour
         let conteneur = NanoXBuild.Div(null, null, "display: flex; flex-direction: column; width:100%;")
         // Add Titre
         conteneur.appendChild(NanoXBuild.DivText("Nouvelle Tenue", null, "Titre MarginTitre", "text-align: center;"))
         // Date de la tenue
-        let DivDate = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem;") 
+        let DivDate = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: center;") 
         conteneur.appendChild(DivDate)
         DivDate.appendChild(NanoXBuild.DivText("Date Tenue:", null, "Text InputLabelWidth", ""))
-        let InputDate = NanoXBuild.Input(InDate, "text", "InputDate", "", "InputDate", "Input Text", "width: 12rem;")
+        let InputDate = NanoXBuild.Input(InDate, "text", "InputDate", "", "InputDate", "Input Text", "width: 10rem; text-align: right;")
         InputDate.setAttribute("inputmode","none")
         DivDate.appendChild(InputDate)
         // https://mymth.github.io/vanillajs-datepicker
@@ -30,13 +34,8 @@ class ProgrammeTenueBuilder {
             updateOnBlur : false
         });
         // Congé
-        let DivConge = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem;") 
-        conteneur.appendChild(DivConge)
-        DivConge.appendChild(NanoXBuild.DivText("En congé:", null, "Text InputLabelWidth", ""))
-        let DivToogle = NanoXBuild.DivFlexRowEnd(null, null, "width: 12rem;")
-        DivConge.appendChild(DivToogle)
-        DivToogle.appendChild(NanoXBuild.ToggleSwitch({Id : "Conge", Checked : InConge, OnChange : this.OnChangeToogleConge.bind(this), HeightRem : 2}))
-        
+        conteneur.appendChild(UiComponent.InputWithToogle("En congé:", "Conge", InConge, "10rem", this.OnChangeToogleConge.bind(this)))
+
         // Div info agenda
         let conteneurinfo = NanoXBuild.Div(this._Idconteneurinfo, null, "display: flex; flex-direction: column; width:100%;")
         conteneur.appendChild(conteneurinfo)
@@ -56,8 +55,8 @@ class ProgrammeTenueBuilder {
         const ListeOfLocalSeminaire = ["Lumière"]
         conteneurinfo.appendChild(UiComponent.InputWithTitreAndListeOfValue("Local séminaire:", "inputSeminaireLocal", InSeminaireLocal, ListeOfLocalSeminaire))
         // Ordre du jour ToDo
-        conteneurinfo.appendChild(NanoXBuild.DivText("Ordre du jour:", null, "SousTitre", "width:100%; margin-bottom: 0.5rem;"))
-        let ListeOfOrdreDuJour = NanoXBuild.DivFlexColumn(null, null, "width:100%; margin-bottom: 1rem;")
+        conteneurinfo.appendChild(NanoXBuild.DivText("Ordre du jour:", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem; text-align: center;"))
+        let ListeOfOrdreDuJour = NanoXBuild.DivFlexColumn(this._Idlisteordredujour, null, "width:100%; margin-bottom: 1rem;")
         conteneurinfo.appendChild(ListeOfOrdreDuJour)
         if(this._OrdreDuJour.length == 0){
             ListeOfOrdreDuJour.appendChild(NanoXBuild.DivText("Pas d'ordre du jour", null, "Text", ""))
@@ -67,11 +66,19 @@ class ProgrammeTenueBuilder {
         }
         // Add Ordre du jour
         conteneurinfo.appendChild(NanoXBuild.Button("Add", this.BuildViewOdjTenueGrade.bind(this), null, "Button MarginButton Text", "width: 6rem; margin-left: auto; margin-right: auto;")) 
+        
+        // Publish
+        conteneur.appendChild(UiComponent.InputWithToogle("Publish:", "Publish", InPublish, "10rem"))
+        
         // Save Cancel boutton
-        let ConteneurAction = NanoXBuild.DivFlexRowSpaceAround(null, null, "width: 100%; margin-top: 1rem;")
+        let ConteneurAction = NanoXBuild.DivFlexRowSpaceEvenly(null, null, "width: 100%; margin-top: 1rem;")
         ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickSaveTenue.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
         ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this._ButtonActionCancel, null, "Button MarginButton Text", "width: 6rem;"))
         conteneur.appendChild(ConteneurAction)
+
+        // EmptySpace
+        conteneur.appendChild(NanoXBuild.Div("", "", "height: 2rem;"))
+
         return conteneur
     }
 
@@ -174,6 +181,31 @@ class ProgrammeTenueBuilder {
         NanoXBuild.PopupCreate(conteneur)
     }
 
+    BuildViewMorceauArchitecture(OrateurNom= "", OrateurLoge= "", Titre= "", Valide= false){
+        this._TenueType = "MorceauArchitecture"
+        this._TenueNumero = (this._TenueNumero == null)? "" : this._TenueNumero
+        // Conteneur du popup
+        let conteneur = NanoXBuild.DivFlexColumn("", "", "width: 100%;")
+        // Titre du popup
+        conteneur.appendChild(NanoXBuild.DivText(this._TenueGrade + ": Morceau architecture", null, "SousTitre", "margin-bottom: 1rem; text-align: center;"))
+        // DivInput
+        let divinput = NanoXBuild.Div("", "", "display: flex; flex-direction: column; align-items: start;")
+        conteneur.appendChild(divinput)
+        // Numero de la tenue
+        divinput.appendChild(UiComponent.InputWithTitre("Numero:", "InputTenueNumero", this._TenueNumero, "10rem"))
+        // Orateur nom
+        divinput.appendChild(UiComponent.InputWithTitre("Orateur:", "InputOrateurNom", OrateurNom, "20rem"))
+        // Orateur Loge
+        divinput.appendChild(UiComponent.InputWithTitre("Orateur (Loge):", "InputOrateurLoge", OrateurLoge, "20rem"))
+        // Titre
+        divinput.appendChild(UiComponent.InputWithTitre("Titre:", "InputTitre", Titre, "20rem"))
+        // Valide
+        divinput.appendChild(UiComponent.InputWithToogle("Publish:", "InputValide", Valide, "20rem"))
+
+        // Creation du popup
+        NanoXBuild.PopupCreate(conteneur, [{Titre: "Save", Action: this.ClickSaveMorceauArchitecture.bind(this), Id: null}, {Titre: "Close", Action: NanoXBuild.PopupDelete, Id: null}])
+    }
+
     OnChangeToogleConge(event){
         let conteneurinfo = document.getElementById(this._Idconteneurinfo)
         if (event.target.checked){
@@ -185,7 +217,7 @@ class ProgrammeTenueBuilder {
 
     ClickAddTenueMorceauArchitecture(){
         NanoXBuild.PopupDelete()
-        alert("ToDo " + this._TenueGrade)
+        this.BuildViewMorceauArchitecture()
     }
 
     ClickAddTenueDossier(){
@@ -236,5 +268,17 @@ class ProgrammeTenueBuilder {
     ClickSaveTenue(){
         alert("Save Tenue") // ToDo
         this._ButtonActionCancel()
+    }
+
+    ClickSaveMorceauArchitecture(){
+        this._TenueNumero = document.getElementById("InputTenueNumero").value
+        this._TenueInfo = {
+            OrateurNom: document.getElementById("InputOrateurNom").value,  
+            OrateurLoge: document.getElementById("InputOrateurLoge").value,  
+            Titre: document.getElementById("InputTitre").value,  
+            Valide: document.getElementById("InputValide").checked
+        }
+        NanoXBuild.PopupDelete()
+        console.log(this._TenueInfo)
     }
 }

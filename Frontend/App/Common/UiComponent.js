@@ -26,12 +26,13 @@ class UiComponent{
      * @param {Array} ListeOfValue Liste des valeurs possible de l'input
      * @returns HtmlElement Div
      */
-    static InputWithTitreAndListeOfValue(Titre = "Titre", InputID= "InputId", InitValue = "", ListeOfValue = []){
-        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem;") 
+    static InputWithTitreAndListeOfValue(Titre = "Titre", InputID= "InputId", InitValue = "", ListeOfValue = [], Width = "10rem"){
+        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: center;") 
         Div.appendChild(NanoXBuild.DivText(Titre, null, "Text InputLabelWidth", ""))
-        let Myinput = NanoXBuild.Input(InitValue, "text", InputID, "", InputID, "Input Text", "width: 12rem")
+        let Myinput = NanoXBuild.Input(InitValue, "text", InputID, "", InputID, "Input Text", `width: ${Width}; text-align: right;`)
         Myinput.autocomplete = "off"
         Myinput.setAttribute("inputmode","none")
+        Myinput.setAttribute ("onfocus" , "this.value = ''; ")
         Div.appendChild(Myinput)
         autocomplete({
             input: Myinput,
@@ -54,6 +55,7 @@ class UiComponent{
                 document.getElementById(InputID).value = item.label;
             },
             customize: function(input, inputRect, container, maxHeight) {
+                container.style.textAlign = "right"
                 if (container.childNodes.length == 1){
                     if (container.childNodes[0].innerText == 'No suggestion'){
                         input.style.backgroundColor = "lightcoral"
@@ -66,6 +68,42 @@ class UiComponent{
             },
             disableAutoSelect: false
         });
+        return Div
+    }
+
+    /**
+     * Construit un Div contentant in Input, son titre, et sa liste de valeur
+     * @param {String} Titre Titre de l'input
+     * @param {String} InputID Id de l'input
+     * @param {String} InitValue Valeur intitial de l'input
+     * @returns HtmlElement Div
+     */
+     static InputWithTitre(Titre = "Titre", InputID= "InputId", InitValue = "", Width = "10rem"){
+        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: start;") 
+        Div.appendChild(NanoXBuild.DivText(Titre, null, "Text InputLabelWidth", ""))
+        let Myinput = NanoXBuild.Input(InitValue, "text", InputID, "", InputID, "Input Text", `width: ${Width}; text-align: right;`)
+        Myinput.autocomplete = "off"
+        Myinput.setAttribute("inputmode","none")
+        Div.appendChild(Myinput)
+        return Div
+    }
+
+    /**
+     * Construit un Div contentant in Input, son titre, et sa liste de valeur
+     * @param {String} Titre Titre de l'input
+     * @param {String} InputID Id de l'input
+     * @param {String} InitValue Valeur intitial de l'input
+     * @param {String} Width Largeur de l'input
+     * @param {Function} OnChangeToogle Fonction a executer lors du changement du toogle
+     * @param {Number} HeightRem Hauteur en rem du toogle
+     * @returns HtmlElement Div
+     */
+     static InputWithToogle(Titre = "Titre", InputID= "InputId", InitValue = false, Width = "10rem", OnChangeToogle = null, HeightRem = 2){
+        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: center;") 
+        Div.appendChild(NanoXBuild.DivText(Titre, null, "Text InputLabelWidth", ""))
+        let DivToogle = NanoXBuild.DivFlexRowEnd(null, null, `width: ${Width};`)
+        Div.appendChild(DivToogle)
+        DivToogle.appendChild(NanoXBuild.ToggleSwitch({Id : InputID, Checked : InitValue, OnChange : OnChangeToogle, HeightRem : HeightRem}))
         return Div
     }
 }
