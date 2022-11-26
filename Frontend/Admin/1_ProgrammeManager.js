@@ -110,7 +110,7 @@ class ProgrammeManager {
         this._DivApp.innerHTML=""
         // Add Tenu vue
         let ProgBuilder = new ProgrammeTenueBuilder(this.ClickNewProgrammeCancel.bind(this))
-        this._DivApp.appendChild(ProgBuilder.ViewNewProgrammeTenue())
+        ProgBuilder.ViewNewProgrammeTenue()
     }
 
     /**
@@ -123,7 +123,7 @@ class ProgrammeManager {
         this._DivApp.innerHTML=""
         // Add COD vue
         let ProgBuilder = new ProgrammeCodBuilder(this.ClickNewProgrammeCancel.bind(this))
-        this._DivApp.appendChild(ProgBuilder.ViewNewProgrammeCod())
+        ProgBuilder.ViewNewProgrammeCod()
     }
 
     /**

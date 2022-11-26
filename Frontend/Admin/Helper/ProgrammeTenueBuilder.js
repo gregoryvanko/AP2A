@@ -1,5 +1,7 @@
 class ProgrammeTenueBuilder {
     constructor(ButtonActionCancel){
+        this._DivApp = NanoXGetDivApp()
+
         this._ButtonActionCancel = ButtonActionCancel
 
         this._OrdreDuJour = []
@@ -12,7 +14,22 @@ class ProgrammeTenueBuilder {
         this._Idlisteordredujour = "listeordredujour"
     }
 
+    /**
+     * Efface les button action dans la barre de menu
+     */
+     ClearActionButton(){
+        // On efface les bouttons existants a gauche et a droite
+        NanoXClearMenuButtonLeft()
+        NanoXClearMenuButtonRight()
+        NanoXClearMenuButtonSettings()
+    }
+
     ViewNewProgrammeTenue({InDate="", InConge=false, InTemple="", InRite="", InRepas="", InSeminaireType="", InSeminaireLocal="", InOrdreDuJour = [], InPublish = false}={}){
+        // Clear Action Button
+        this.ClearActionButton()
+        // Clear view
+        this._DivApp.innerHTML=""
+
         this._OrdreDuJour = InOrdreDuJour
         let conteneur = NanoXBuild.Div(null, null, "display: flex; flex-direction: column; width:100%;")
         // Add Titre
@@ -54,7 +71,7 @@ class ProgrammeTenueBuilder {
         // Seminaire local
         const ListeOfLocalSeminaire = ["Lumière"]
         conteneurinfo.appendChild(UiComponent.InputWithTitreAndListeOfValue("Local séminaire:", "inputSeminaireLocal", InSeminaireLocal, ListeOfLocalSeminaire))
-        // Ordre du jour ToDo
+        // Ordre du jour
         conteneurinfo.appendChild(NanoXBuild.DivText("Ordre du jour:", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem; text-align: center;"))
         let ListeOfOrdreDuJour = NanoXBuild.DivFlexColumn(this._Idlisteordredujour, null, "width:100%; margin-bottom: 1rem;")
         conteneurinfo.appendChild(ListeOfOrdreDuJour)
@@ -65,10 +82,11 @@ class ProgrammeTenueBuilder {
             this.BuildViewOdjListe()
         }
         // Add Ordre du jour
-        conteneurinfo.appendChild(NanoXBuild.Button("Add", this.BuildViewOdjTenueGrade.bind(this), null, "Button MarginButton Text", "width: 6rem; margin-left: auto; margin-right: auto;")) 
+        conteneurinfo.appendChild(NanoXBuild.Button("Ajouter Ordre du jour", this.BuildViewOdjTenueGrade.bind(this), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
         
         // Publish
-        conteneur.appendChild(UiComponent.InputWithToogle("Publish:", "Publish", InPublish, "10rem"))
+        conteneurinfo.appendChild(NanoXBuild.DivText("Publier:", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem; text-align: center;"))
+        conteneur.appendChild(UiComponent.InputWithToogle("Publier:", "Publish", InPublish, "10rem"))
         
         // Save Cancel boutton
         let ConteneurAction = NanoXBuild.DivFlexRowSpaceEvenly(null, null, "width: 100%; margin-top: 1rem;")
@@ -79,7 +97,7 @@ class ProgrammeTenueBuilder {
         // EmptySpace
         conteneur.appendChild(NanoXBuild.Div("", "", "height: 2rem;"))
 
-        return conteneur
+        this._DivApp.appendChild(conteneur)
     }
 
     BuildViewOdjListe(){
@@ -181,31 +199,6 @@ class ProgrammeTenueBuilder {
         NanoXBuild.PopupCreate(conteneur)
     }
 
-    BuildViewMorceauArchitecture(OrateurNom= "", OrateurLoge= "", Titre= "", Valide= false){
-        this._TenueType = "MorceauArchitecture"
-        this._TenueNumero = (this._TenueNumero == null)? "" : this._TenueNumero
-        // Conteneur du popup
-        let conteneur = NanoXBuild.DivFlexColumn("", "", "width: 100%;")
-        // Titre du popup
-        conteneur.appendChild(NanoXBuild.DivText(this._TenueGrade + ": Morceau architecture", null, "SousTitre", "margin-bottom: 1rem; text-align: center;"))
-        // DivInput
-        let divinput = NanoXBuild.Div("", "", "display: flex; flex-direction: column; align-items: start;")
-        conteneur.appendChild(divinput)
-        // Numero de la tenue
-        divinput.appendChild(UiComponent.InputWithTitre("Numero:", "InputTenueNumero", this._TenueNumero, "10rem"))
-        // Orateur nom
-        divinput.appendChild(UiComponent.InputWithTitre("Orateur:", "InputOrateurNom", OrateurNom, "20rem"))
-        // Orateur Loge
-        divinput.appendChild(UiComponent.InputWithTitre("Orateur (Loge):", "InputOrateurLoge", OrateurLoge, "20rem"))
-        // Titre
-        divinput.appendChild(UiComponent.InputWithTitre("Titre:", "InputTitre", Titre, "20rem"))
-        // Valide
-        divinput.appendChild(UiComponent.InputWithToogle("Publish:", "InputValide", Valide, "20rem"))
-
-        // Creation du popup
-        NanoXBuild.PopupCreate(conteneur, [{Titre: "Save", Action: this.ClickSaveMorceauArchitecture.bind(this), Id: null}, {Titre: "Close", Action: NanoXBuild.PopupDelete, Id: null}])
-    }
-
     OnChangeToogleConge(event){
         let conteneurinfo = document.getElementById(this._Idconteneurinfo)
         if (event.target.checked){
@@ -217,7 +210,14 @@ class ProgrammeTenueBuilder {
 
     ClickAddTenueMorceauArchitecture(){
         NanoXBuild.PopupDelete()
-        this.BuildViewMorceauArchitecture()
+        // Clear Action Button
+        this.ClearActionButton()
+        // Clear view
+        this._DivApp.innerHTML=""
+        // Create view ordre du jour
+        this._TenueType = "MorceauArchitecture"
+        let Oredredujour = new ProgrammeOredredujour()
+        this._DivApp.appendChild(Oredredujour.ShowMorceauArchitecture(this._TenueGrade, this._TenueNumero))
     }
 
     ClickAddTenueDossier(){
