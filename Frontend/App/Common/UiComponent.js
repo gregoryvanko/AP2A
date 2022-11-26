@@ -27,7 +27,7 @@ class UiComponent{
      * @returns HtmlElement Div
      */
     static InputWithTitreAndListeOfValue(Titre = "Titre", InputID= "InputId", InitValue = "", ListeOfValue = [], Width = "10rem"){
-        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: center;") 
+        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: space-between; width: 100%;") 
         Div.appendChild(NanoXBuild.DivText(Titre, null, "Text InputLabelWidth", ""))
         let Myinput = NanoXBuild.Input(InitValue, "text", InputID, "", InputID, "Input Text", `width: ${Width}; text-align: right;`)
         Myinput.autocomplete = "off"
@@ -79,9 +79,9 @@ class UiComponent{
      * @returns HtmlElement Div
      */
      static InputWithTitre(Titre = "Titre", InputID= "InputId", InitValue = "", Width = "10rem"){
-        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: start;") 
+        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: space-between; width:100%;") 
         Div.appendChild(NanoXBuild.DivText(Titre, null, "Text InputLabelWidth", ""))
-        let Myinput = NanoXBuild.Input(InitValue, "text", InputID, "", InputID, "Input Text", `width: ${Width}; text-align: right;`)
+        let Myinput = NanoXBuild.Input(InitValue, "text", InputID, "", InputID, "Input Text", `max-width: ${Width}; width:100%; text-align: right;`)
         Myinput.autocomplete = "off"
         Myinput.setAttribute("inputmode","none")
         Div.appendChild(Myinput)
@@ -98,10 +98,10 @@ class UiComponent{
      * @param {Number} HeightRem Hauteur en rem du toogle
      * @returns HtmlElement Div
      */
-     static InputWithToogle(Titre = "Titre", InputID= "InputId", InitValue = false, Width = "10rem", OnChangeToogle = null, HeightRem = 2){
-        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: center;") 
+     static InputWithToogle(Titre = "Titre", InputID= "InputId", InitValue = false, OnChangeToogle = null, HeightRem = 2){
+        let Div = NanoXBuild.DivFlexRowSpaceAround(null, null, "margin-bottom: 1rem; justify-content: space-between; width: 100%;") 
         Div.appendChild(NanoXBuild.DivText(Titre, null, "Text InputLabelWidth", ""))
-        let DivToogle = NanoXBuild.DivFlexRowEnd(null, null, `width: ${Width};`)
+        let DivToogle = NanoXBuild.DivFlexRowEnd(null, null, null)
         Div.appendChild(DivToogle)
         DivToogle.appendChild(NanoXBuild.ToggleSwitch({Id : InputID, Checked : InitValue, OnChange : OnChangeToogle, HeightRem : HeightRem}))
         return Div
