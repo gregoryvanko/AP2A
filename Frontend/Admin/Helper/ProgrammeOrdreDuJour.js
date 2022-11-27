@@ -48,6 +48,7 @@ class ProgrammeOredredujour{
         let conteneur = NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-top: 1rem;")
         // Conteneur des data
         let conteneurOrateur = NanoXBuild.DivFlexColumn(null, null, "width:88%;")
+        conteneurOrateur.setAttribute("data-orateur","orateur")
         conteneur.appendChild(conteneurOrateur)
         // Delete button
         let conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 3rem;")
@@ -70,13 +71,37 @@ class ProgrammeOredredujour{
         conteneur.parentNode.removeChild(conteneur)
     }
 
-    ClickSaveMorceauArchitecture(){
-        let Data = {
-            TenueNumero: document.getElementById("InputTenueNumero").value,
-            Titre: document.getElementById("InputTitre").value,  
-            Valide: document.getElementById("InputValide").checked
+    GetListeOrateur(){
+        let listeorateur = []
+        const AllElements = document.querySelectorAll('[data-orateur="orateur"]')
+        if(AllElements.length != 0){
+            AllElements.forEach(element => {
+                const OrateurName = element.querySelector('#InputOrateurNom').value
+                const OrateurLoge = element.querySelector('#InputOrateurLoge').value
+                listeorateur.push({Nom:OrateurName, Loge:OrateurLoge})
+            })
         }
-        this._CallBack(Data)
+        return listeorateur
+    }
+
+    ClickSaveMorceauArchitecture(){
+        const TenueNumero = document.getElementById("InputTenueNumero").value
+        const Titre = document.getElementById("InputTitre").value
+        const ListeOrateur= this.GetListeOrateur()
+
+        if((TenueNumero == "") || (Titre == "") || (ListeOrateur.length == 0)){
+            // Popup error
+            let content = NanoXBuild.DivText("Erreur: remplir le numero et le titre", null, "Text", "color: red; text-align: center;")
+            NanoXBuild.PopupCreate(content)
+        } else {
+            let Data = {
+                TenueNumero: TenueNumero,
+                Titre: Titre,  
+                Valide: document.getElementById("InputValide").checked,
+                ListeOrateur: ListeOrateur
+            }
+            this._CallBack(Data)
+        }
     }
 
     ClickCancel(){
