@@ -102,3 +102,9 @@ body{
 .InputLabelWidth{
     width: 10rem;
 }
+
+.OredreDuJourResume{
+    border: solid 1px gray;
+    border-radius: 5px;
+    padding: 0.4rem;
+}

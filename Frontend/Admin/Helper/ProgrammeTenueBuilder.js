@@ -15,10 +15,11 @@ class ProgrammeTenueBuilder {
         this._Publish = false
         this._TenueGrade = null
         this._TenueType = null
-        this._TenueNumero = null
 
         this._Idconteneurinfo = "conteneurinfo"
         this._Idlisteordredujour = "listeordredujour"
+
+        this._ConstMorceauArchitecture = "MorceauArchitecture"
     }
 
     /**
@@ -86,7 +87,7 @@ class ProgrammeTenueBuilder {
             ListeOfOrdreDuJour.appendChild(NanoXBuild.DivText("Pas d'ordre du jour", null, "Text", ""))
         } else {
             // Construire la liste de l'ordre du jour
-            this.BuildViewOdjListe()
+            this.BuildViewOdjListe(ListeOfOrdreDuJour)
         }
         // Boutton Add Ordre du jour
         conteneurinfo.appendChild(NanoXBuild.Button("Ajouter Ordre du jour", this.BuildViewOdjTenueGrade.bind(this), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
@@ -107,7 +108,26 @@ class ProgrammeTenueBuilder {
         this._DivApp.appendChild(conteneur)
     }
 
-    BuildViewOdjListe(){
+    BuildViewOdjListe(ListeOfOrdreDuJour){
+        this._OrdreDuJour.forEach(element => {
+            const conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
+            // Ordre du jour
+            const ordredujour = NanoXBuild.DivFlexColumn(null, "OredreDuJourResume", "width:88%;")
+            conteneur.appendChild(ordredujour)
+            // Delete button
+            const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 3rem;")
+            conteneur.appendChild(conteneurBoutton)
+            const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteOrdreDuJour.bind(this), null, "ButtonAction")
+            conteneurBoutton.appendChild(bouttonDelete)
+            // creation ordre du jour
+            ordredujour.appendChild(NanoXBuild.DivText(element.Titre, null, "Text"))
+
+            // ajout ordre du jour
+            ListeOfOrdreDuJour.appendChild(conteneur)
+        })
+    }
+
+    DeleteOrdreDuJour(){
         // ToDo
     }
 
@@ -232,17 +252,18 @@ class ProgrammeTenueBuilder {
         // Clear view
         this._DivApp.innerHTML=""
         // Create view ordre du jour
-        this._TenueType = "MorceauArchitecture"
+        this._TenueType = this._ConstMorceauArchitecture
         let Oredredujour = new ProgrammeOredredujour(this.CallBackAddOrdreDuJour.bind(this))
-        Oredredujour.ShowMorceauArchitecture(this._TenueGrade, this._TenueNumero)
+        Oredredujour.ShowMorceauArchitecture(this._TenueGrade)
     }
 
     CallBackAddOrdreDuJour(Data){
         if (Data != null){
-            this._OrdreDuJour = Data
+            Data.TenueType = this._TenueType
+            Data.TenueGrade = this._TenueGrade
+            this._OrdreDuJour.push(Data)
         }
         this.ViewNewProgrammeTenue()
-        console.log(this._OrdreDuJour )
     }
 
     ClickAddTenueDossier(){

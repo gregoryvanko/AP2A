@@ -3,12 +3,10 @@ class ProgrammeOredredujour{
         this._DivApp = NanoXGetDivApp()
 
         this._CallBack = CallBack
-        this._TenueNumero = null
         this._ListeOrateur = []
     }
 
-    ShowMorceauArchitecture(TenueGrade = "", TenueNumero= null, Titre= "", Valide= false, ListeOrateur= this._ListeOrateur){
-        this._TenueNumero = (TenueNumero == null)? "" : TenueNumero
+    ShowMorceauArchitecture(TenueGrade = "", TenueNumero= "", Titre= "", Valide= false, ListeOrateur= this._ListeOrateur){
         // Clear view
         this._DivApp.innerHTML=""
 
@@ -17,7 +15,7 @@ class ProgrammeOredredujour{
         // Titre du popup
         conteneur.appendChild(NanoXBuild.DivText(TenueGrade + ": Morceau architecture", null, "Titre MarginTitre", "margin-bottom: 1rem; margin-top: 1rem; text-align: center;"))
         // Numero de la tenue
-        conteneur.appendChild(UiComponent.InputWithTitre("Numero:", "InputTenueNumero", this._TenueNumero, "6rem"))
+        conteneur.appendChild(UiComponent.InputWithTitre("Numero:", "InputTenueNumero", TenueNumero, "6rem"))
         // Titre
         conteneur.appendChild(UiComponent.InputWithTitre("Titre:", "InputTitre", Titre, "24rem"))
         // Orateur
@@ -40,7 +38,13 @@ class ProgrammeOredredujour{
 
         this._DivApp.appendChild(conteneur)
         // add orateur
-        this.AddNewOrateur()
+        if (ListeOrateur.length == 0){
+            this.AddNewOrateur()
+        } else {
+            ListeOrateur.forEach(element => {
+                conteneurOrateur.appendChild(this.BuildOrateurInput(element))
+            });
+        }
     }
 
     BuildOrateurInput(Orateur = {Nom:"", Loge:""}){
