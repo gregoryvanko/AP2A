@@ -1,23 +1,24 @@
 class ProgrammeOredredujour{
-    constructor(CallBack){
+    constructor(CallBack, IndexOfUpdatedElement){
         this._DivApp = NanoXGetDivApp()
 
         this._CallBack = CallBack
+        this._IndexOfUpdatedElement = IndexOfUpdatedElement
+
         this._ListeOrateur = []
         
-        this._ConstMorceauArchitecture = "MorceauArchitecture"
     }
 
-    get ConstMorceauArchitecture(){return this._ConstMorceauArchitecture}
+    static ConstMorceauArchitecture(){return "MorceauArchitecture"}
 
     Show(Type = "", Data = {}){
         switch (Type) {
-            case this._ConstMorceauArchitecture:
+            case ProgrammeOredredujour.ConstMorceauArchitecture():
                 this.ShowMorceauArchitecture(Data)
                 break;
         
             default:
-                alert("Type of Programme not found")
+                alert("Type of Programme not found: " + Type)
                 break;
         }
     }
@@ -111,16 +112,16 @@ class ProgrammeOredredujour{
             NanoXBuild.PopupCreate(content)
         } else {
             let Data = {
-                Type: this._ConstMorceauArchitecture,
+                Type: ProgrammeOredredujour.ConstMorceauArchitecture(),
                 Titre: Titre,  
                 Valide: document.getElementById("InputValide").checked,
                 ListeOrateur: ListeOrateur
             }
-            this._CallBack(Data)
+            this._CallBack(Data, this._IndexOfUpdatedElement)
         }
     }
 
     ClickCancel(){
-        this._CallBack(null)
+        this._CallBack(null, this._IndexOfUpdatedElement )
     }
 }

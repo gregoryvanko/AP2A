@@ -18,6 +18,8 @@ class ProgrammeTenueBuilder {
 
         this._Idconteneurinfo = "conteneurinfo"
         this._Idlisteordredujour = "listeordredujour"
+
+        this._ConstApprenti = "Apprenti"
     }
 
     /**
@@ -77,8 +79,8 @@ class ProgrammeTenueBuilder {
         // Seminaire local
         const ListeOfLocalSeminaire = ["Lumière"]
         conteneurinfo.appendChild(UiComponent.InputWithTitreAndListeOfValue("Local séminaire:", "inputSeminaireLocal", InSeminaireLocal, ListeOfLocalSeminaire))
-        // Ordre du jour
-        conteneurinfo.appendChild(NanoXBuild.DivText("Ordre du jour", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem; text-align: center;"))
+        // Type de tenue
+        conteneurinfo.appendChild(NanoXBuild.DivText("Type de tenue", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem; text-align: center;"))
         let ListeOfOrdreDuJour = NanoXBuild.DivFlexColumn(this._Idlisteordredujour, null, "width:100%; margin-bottom: 1rem;")
         conteneurinfo.appendChild(ListeOfOrdreDuJour)
         if(this._OrdreDuJour.length != 0){
@@ -86,10 +88,10 @@ class ProgrammeTenueBuilder {
             this.BuildViewOdjListe(ListeOfOrdreDuJour)
         }
         // Boutton Add Ordre du jour
-        conteneurinfo.appendChild(NanoXBuild.Button("Ajouter Ordre du jour", this.BuildViewOdjTenueGrade.bind(this), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
+        conteneurinfo.appendChild(NanoXBuild.Button("Ajouter une Tenue", this.BuildViewOdjTenueGrade.bind(this), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
         
         // Publish
-        conteneur.appendChild(NanoXBuild.DivText("Publier", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem; text-align: center;"))
+        conteneur.appendChild(NanoXBuild.DivText("Publier", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem; text-align: left;"))
         conteneur.appendChild(UiComponent.InputWithToogle("Publier la tenue:", "Publish", InPublish))
         
         // Save Cancel boutton
@@ -116,7 +118,34 @@ class ProgrammeTenueBuilder {
             const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteOrdreDuJour.bind(this, conteneur, element), null, "ButtonAction")
             conteneurBoutton.appendChild(bouttonDelete)
             // creation ordre du jour
-            ordredujour.appendChild(NanoXBuild.DivText(element.TenueGrade, null, "Text")) // ToDo
+            switch (element.TenueGrade) {
+                case this._ConstApprenti:
+                    let Titre = "A-" + element.TenueNumero
+                    ordredujour.appendChild(NanoXBuild.DivText(Titre, null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
+                    let valide = true
+                    element.Programme.forEach(elementProgramme => {
+                        if (!elementProgramme.Valide){valide = false}
+                        switch (elementProgramme.Type) {
+                            case ProgrammeOredredujour.ConstMorceauArchitecture():
+                                let TitreProgramme = "Morc Archi : " + elementProgramme.Titre
+                                ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "Text", "width:100%;"))
+                                break;
+                        
+                            default:
+                                alert("Tenue Programme not found: " + elementProgramme.Type)
+                                break;
+                        }
+                    });
+                    // Validation
+                    if (!valide){
+                        ordredujour.classList.add("BorderColorRed")
+                    }
+                    break;
+            
+                default:
+                    alert("Tenue Grage not found: " + element.TenueGrade)
+                    break;
+            }
 
             // ajout ordre du jour
             ListeOfOrdreDuJour.appendChild(conteneur)
@@ -138,7 +167,7 @@ class ProgrammeTenueBuilder {
         let DivButtonTypeOfTenue = NanoXBuild.DivFlexRowSpaceEvenly()
         conteneur. appendChild(DivButtonTypeOfTenue)
         // Boutton Apprenti
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Apprenti(), "Apprenti", this.ClickBuildViewOdjTenueApprenti.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Apprenti(), this._ConstApprenti, this.ClickBuildViewOdjTenueApprenti.bind(this)))
         // Boutton Compagnon
         DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Compagnon(), "Compagnon", this.BuildViewOdjTenueCompagnon.bind(this)))
         // Boutton Maitre
@@ -183,10 +212,12 @@ class ProgrammeTenueBuilder {
         const ListeOfProgramme = document.getElementById(this._Idlisteordredujour)
         ProgrammeApprenti.forEach(element => {
             switch (element.Type) {
-                case "MorceauArchitecture":
-                    const conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
+                case ProgrammeOredredujour.ConstMorceauArchitecture():
+                    let conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
                     // Ordre du jour
                     const ordredujour = NanoXBuild.DivFlexColumn(null, "OredreDuJourResume", "width:88%;")
+                    ordredujour.style.cursor = 'pointer'
+                    ordredujour.onclick = this.ModifyViewTenueMorceauArchitecture.bind(this, element)
                     if (!element.Valide){
                         ordredujour.classList.add("BorderColorRed")
                     }
@@ -211,6 +242,11 @@ class ProgrammeTenueBuilder {
                     break;
             }
         });
+    }
+
+    ModifyViewTenueMorceauArchitecture(element){
+        this.BuildViewTenueMorceauArchitecture(element, this._Tenue.Programme.indexOf(element))
+        console.log(this._Tenue.Programme.indexOf(element))
     }
 
     DeleteProgramme(ConteneurProgramme, element){
@@ -303,6 +339,10 @@ class ProgrammeTenueBuilder {
 
     ClickAddTenueMorceauArchitecture(){
         NanoXBuild.PopupDelete()
+        this.BuildViewTenueMorceauArchitecture()
+    }
+
+    BuildViewTenueMorceauArchitecture(Data = {}, IndexOfUpdatedElement = null){
         // Clear Action Button
         this.ClearActionButton()
         // Save Tenue numero
@@ -310,13 +350,17 @@ class ProgrammeTenueBuilder {
         // Clear view
         this._DivApp.innerHTML=""
         // Create view ordre du jour
-        let Oredredujour = new ProgrammeOredredujour(this.CallBackAddProgrammeApprenti.bind(this))
-        Oredredujour.Show(Oredredujour.ConstMorceauArchitecture)
+        let Oredredujour = new ProgrammeOredredujour(this.CallBackAddProgrammeApprenti.bind(this), IndexOfUpdatedElement)
+        Oredredujour.Show(ProgrammeOredredujour.ConstMorceauArchitecture(), Data)
     }
 
-    CallBackAddProgrammeApprenti(Data){
+    CallBackAddProgrammeApprenti(Data, IndexOfUpdatedElement){
         if (Data != null){
-            this._Tenue.Programme.push(Data)
+            if (IndexOfUpdatedElement == null){
+                this._Tenue.Programme.push(Data)
+            } else {
+                this._Tenue.Programme[IndexOfUpdatedElement] = Data
+            }
         }
         this.BuildViewOdjTenueApprenti()
     }
@@ -373,11 +417,12 @@ class ProgrammeTenueBuilder {
 
     ClickSaveTenueApprenti(){
         this._OrdreDuJour.push(this._Tenue)
+        this._Tenue = {TenueGrade: null, TenueNumero: "", Programme: []}
         this.ViewNewProgrammeTenue()
     }
 
     ClickBuildViewOdjTenueApprenti(){
-        this._Tenue.TenueGrade = "Apprenti"
+        this._Tenue.TenueGrade = this._ConstApprenti
         // Delete popup
         NanoXBuild.PopupDelete()
         // Clear Action Button
