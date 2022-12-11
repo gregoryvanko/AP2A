@@ -15,6 +15,7 @@ class ProgrammeTenueBuilder {
         this._Publish = false
 
         this._Tenue = {TenueGrade: null, TenueNumero: "", Programme: []}
+        this._IndexOfUpdatedElement = null
 
         this._Idconteneurinfo = "conteneurinfo"
         this._Idlisteordredujour = "listeordredujour"
@@ -37,6 +38,11 @@ class ProgrammeTenueBuilder {
         this.ClearActionButton()
         // Clear view
         this._DivApp.innerHTML=""
+
+        // Reset Index Of Updated Element
+        this._IndexOfUpdatedElement = null
+        // Reset element tenue
+        this._Tenue = {TenueGrade: null, TenueNumero: "", Programme: []}
 
         this._OrdreDuJour = InOrdreDuJour
         let conteneur = NanoXBuild.Div(null, null, "display: flex; flex-direction: column; width:100%; max-width: 35rem;")
@@ -111,6 +117,8 @@ class ProgrammeTenueBuilder {
             const conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
             // Ordre du jour
             const ordredujour = NanoXBuild.DivFlexColumn(null, "OredreDuJourResume", "width:88%;")
+            ordredujour.style.cursor = 'pointer'
+            
             conteneur.appendChild(ordredujour)
             // Delete button
             const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 3rem;")
@@ -120,6 +128,7 @@ class ProgrammeTenueBuilder {
             // creation ordre du jour
             switch (element.TenueGrade) {
                 case this._ConstApprenti:
+                    ordredujour.onclick = this.ModifyViewTenueApprenti.bind(this, element)
                     let Titre = "A-" + element.TenueNumero
                     ordredujour.appendChild(NanoXBuild.DivText(Titre, null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
                     let valide = true
@@ -130,7 +139,6 @@ class ProgrammeTenueBuilder {
                                 let TitreProgramme = "Morc Archi : " + elementProgramme.Titre
                                 ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "Text", "width:100%;"))
                                 break;
-                        
                             default:
                                 alert("Tenue Programme not found: " + elementProgramme.Type)
                                 break;
@@ -141,15 +149,19 @@ class ProgrammeTenueBuilder {
                         ordredujour.classList.add("BorderColorRed")
                     }
                     break;
-            
                 default:
                     alert("Tenue Grage not found: " + element.TenueGrade)
                     break;
             }
-
             // ajout ordre du jour
             ListeOfOrdreDuJour.appendChild(conteneur)
         })
+    }
+
+    ModifyViewTenueApprenti(element){
+        this._Tenue = element
+        this._IndexOfUpdatedElement = this._OrdreDuJour.indexOf(element)
+        this.BuildViewOdjTenueApprentiAndSave()
     }
 
     DeleteOrdreDuJour(ConteneurOdj, element){
@@ -246,7 +258,6 @@ class ProgrammeTenueBuilder {
 
     ModifyViewTenueMorceauArchitecture(element){
         this.BuildViewTenueMorceauArchitecture(element, this._Tenue.Programme.indexOf(element))
-        console.log(this._Tenue.Programme.indexOf(element))
     }
 
     DeleteProgramme(ConteneurProgramme, element){
@@ -416,20 +427,30 @@ class ProgrammeTenueBuilder {
     }
 
     ClickSaveTenueApprenti(){
-        this._OrdreDuJour.push(this._Tenue)
-        this._Tenue = {TenueGrade: null, TenueNumero: "", Programme: []}
+        // Save Tenue numero
+        this._Tenue.TenueNumero = document.getElementById("InputTenueNumero").value
+
+        if (this._IndexOfUpdatedElement == null){
+            this._OrdreDuJour.push(this._Tenue)
+        } else {
+            this._OrdreDuJour[this._IndexOfUpdatedElement]= this._Tenue
+        }
         this.ViewNewProgrammeTenue()
     }
 
     ClickBuildViewOdjTenueApprenti(){
-        this._Tenue.TenueGrade = this._ConstApprenti
         // Delete popup
         NanoXBuild.PopupDelete()
+        this.BuildViewOdjTenueApprentiAndSave()
+    }
+
+    BuildViewOdjTenueApprentiAndSave(){
+        this._Tenue.TenueGrade = this._ConstApprenti
         // Clear Action Button
         this.ClearActionButton()
         // Save data
         this._Date = document.getElementById("InputDate").value
-        this._Conge = document.getElementById("InputDate").checked
+        this._Conge = document.getElementById("Conge").checked
         this._Temple = document.getElementById("InputTemple").value
         this._Rite = document.getElementById("InputRite").value
         this._Repas = document.getElementById("InputRepas").value
@@ -439,4 +460,5 @@ class ProgrammeTenueBuilder {
 
         this.BuildViewOdjTenueApprenti()
     }
+    
 }
