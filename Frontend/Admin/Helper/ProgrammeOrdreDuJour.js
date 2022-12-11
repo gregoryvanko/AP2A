@@ -4,18 +4,32 @@ class ProgrammeOredredujour{
 
         this._CallBack = CallBack
         this._ListeOrateur = []
+        
+        this._ConstMorceauArchitecture = "MorceauArchitecture"
     }
 
-    ShowMorceauArchitecture(TenueGrade = "", TenueNumero= "", Titre= "", Valide= false, ListeOrateur= this._ListeOrateur){
+    get ConstMorceauArchitecture(){return this._ConstMorceauArchitecture}
+
+    Show(Type = "", Data = {}){
+        switch (Type) {
+            case this._ConstMorceauArchitecture:
+                this.ShowMorceauArchitecture(Data)
+                break;
+        
+            default:
+                alert("Type of Programme not found")
+                break;
+        }
+    }
+
+    ShowMorceauArchitecture({Titre= "", Valide= false, ListeOrateur= this._ListeOrateur} = {}){
         // Clear view
         this._DivApp.innerHTML=""
 
         // Conteneur
         let conteneur = NanoXBuild.DivFlexColumn(null, null, "width:100%; margin-bottom: 2rem; max-width: 35rem;")
         // Titre du popup
-        conteneur.appendChild(NanoXBuild.DivText(TenueGrade + ": Morceau architecture", null, "Titre MarginTitre", "margin-bottom: 1rem; margin-top: 1rem; text-align: center;"))
-        // Numero de la tenue
-        conteneur.appendChild(UiComponent.InputWithTitre("Numero:", "InputTenueNumero", TenueNumero, "6rem"))
+        conteneur.appendChild(NanoXBuild.DivText("Morceau architecture", null, "Titre MarginTitre", "margin-bottom: 1rem; margin-top: 1rem; text-align: center;"))
         // Titre
         conteneur.appendChild(UiComponent.InputWithTitre("Titre:", "InputTitre", Titre, "24rem"))
         // Orateur
@@ -25,7 +39,6 @@ class ProgrammeOredredujour{
         // Boutton Add Orateur
         conteneur.appendChild(NanoXBuild.Button("Ajouter un orateur", this.AddNewOrateur.bind(this), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
         
-
         // Valide
         conteneur.appendChild(NanoXBuild.DivText("Validation", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem;"))
         conteneur.appendChild(UiComponent.InputWithToogle("Validé:", "InputValide", Valide))
@@ -60,9 +73,9 @@ class ProgrammeOredredujour{
         let bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteOrateur.bind(this, conteneur), null, "ButtonAction")
         conteneurBoutton.appendChild(bouttonDelete)
         // Orateur nom
-        conteneurOrateur.appendChild(UiComponent.InputWithTitre("Orateur:", "InputOrateurNom", Orateur.Nom, "20rem"))
+        conteneurOrateur.appendChild(UiComponent.InputWithTitre("Orateur:", "InputOrateurNom", Orateur.Nom, "19rem"))
         // Orateur Loge
-        conteneurOrateur.appendChild(UiComponent.InputWithTitre("Orateur (Loge):", "InputOrateurLoge", Orateur.Loge, "20rem"))
+        conteneurOrateur.appendChild(UiComponent.InputWithTitre("Orateur (Loge):", "InputOrateurLoge", Orateur.Loge, "19rem"))
         return conteneur
     }
 
@@ -89,17 +102,16 @@ class ProgrammeOredredujour{
     }
 
     ClickSaveMorceauArchitecture(){
-        const TenueNumero = document.getElementById("InputTenueNumero").value
         const Titre = document.getElementById("InputTitre").value
         const ListeOrateur= this.GetListeOrateur()
 
-        if((TenueNumero == "") || (Titre == "") || (ListeOrateur.length == 0)){
+        if((Titre == "") || (ListeOrateur.length == 0)){
             // Popup error
             let content = NanoXBuild.DivText("Erreur: remplir le numero et le titre", null, "Text", "color: red; text-align: center;")
             NanoXBuild.PopupCreate(content)
         } else {
             let Data = {
-                TenueNumero: TenueNumero,
+                Type: this._ConstMorceauArchitecture,
                 Titre: Titre,  
                 Valide: document.getElementById("InputValide").checked,
                 ListeOrateur: ListeOrateur
