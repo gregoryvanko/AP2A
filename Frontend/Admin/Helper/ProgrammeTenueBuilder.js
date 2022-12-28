@@ -19,7 +19,7 @@ class ProgrammeTenueBuilder {
         }
 
         this._DataTenue = {TenueGrade: null, TenueNumero: "", Programme: []}
-        this._IndexOfUpdatedElement = null
+        this._IndexOfUpdatedTenue = null
 
         this._Idconteneurinfo = "conteneurinfo"
         this._Idlisteordredujour = "listeordredujour"
@@ -30,7 +30,7 @@ class ProgrammeTenueBuilder {
     /**
      * Efface les button action dans la barre de menu
      */
-     ClearActionButton(){
+    ClearActionButton(){
         // On efface les bouttons existants a gauche et a droite
         NanoXClearMenuButtonLeft()
         NanoXClearMenuButtonRight()
@@ -45,7 +45,7 @@ class ProgrammeTenueBuilder {
         // Save dataprogramme
         this._DataProgramme = DataProgramme
         // Reset Index Of Updated Element
-        this._IndexOfUpdatedElement = null
+        this._IndexOfUpdatedTenue = null
         // Reset element tenue
         this._DataTenue = {TenueGrade: null, TenueNumero: "", Programme: []}
 
@@ -95,10 +95,10 @@ class ProgrammeTenueBuilder {
         conteneurinfo.appendChild(ListeOfOrdreDuJour)
         if(this._DataProgramme.OrdreDuJour.length != 0){
             // Construire la liste de l'ordre du jour
-            this.BuildViewOdjListe(ListeOfOrdreDuJour)
+            this.BuildCardOdj(ListeOfOrdreDuJour)
         }
         // Boutton Add Ordre du jour
-        conteneurinfo.appendChild(NanoXBuild.Button("Ajouter une Tenue", this.BuildViewOdjTenueGrade.bind(this), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
+        conteneurinfo.appendChild(NanoXBuild.Button("Ajouter une Tenue", this.BuildPopupTenueGrade.bind(this), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
         
         // Publish
         conteneur.appendChild(NanoXBuild.DivText("Publier", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem; text-align: left;"))
@@ -116,7 +116,16 @@ class ProgrammeTenueBuilder {
         this._DivApp.appendChild(conteneur)
     }
 
-    BuildViewOdjListe(ListeOfOrdreDuJour){
+    OnChangeToogleConge(event){
+        let conteneurinfo = document.getElementById(this._Idconteneurinfo)
+        if (event.target.checked){
+            conteneurinfo.style.display = "none"
+        } else {
+            conteneurinfo.style.display = "flex"
+        }
+    }
+
+    BuildCardOdj(ListeOfOrdreDuJour){
         this._DataProgramme.OrdreDuJour.forEach(element => {
             const conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
             // Ordre du jour
@@ -127,12 +136,12 @@ class ProgrammeTenueBuilder {
             // Delete button
             const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 3rem;")
             conteneur.appendChild(conteneurBoutton)
-            const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteOrdreDuJour.bind(this, conteneur, element), null, "ButtonAction")
+            const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteCardOdj.bind(this, conteneur, element), null, "ButtonAction")
             conteneurBoutton.appendChild(bouttonDelete)
             // creation ordre du jour
             switch (element.TenueGrade) {
                 case this._ConstApprenti:
-                    ordredujour.onclick = this.ModifyViewTenueApprenti.bind(this, element)
+                    ordredujour.onclick = this.AddModifyTenueApprenti.bind(this, element)
                     let Titre = "A-" + element.TenueNumero
                     ordredujour.appendChild(NanoXBuild.DivText(Titre, null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
                     let valide = true
@@ -162,22 +171,13 @@ class ProgrammeTenueBuilder {
         })
     }
 
-    ModifyViewTenueApprenti(element){
-        this._DataTenue = element
-        this._IndexOfUpdatedElement = this._DataProgramme.OrdreDuJour.indexOf(element)
-        // Save Data Programme
-        this.SaveDataProgramme()
-        // Create TenueApprenti
-        let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenueApprenti.bind(this), element)
-    }
-
-    DeleteOrdreDuJour(ConteneurOdj, element){
+    DeleteCardOdj(ConteneurOdj, element){
         ConteneurOdj.parentNode.removeChild(ConteneurOdj)
         const index = this._DataProgramme.OrdreDuJour.indexOf(element);
         this._DataProgramme.OrdreDuJour.splice(index, 1);
     }
 
-    BuildViewOdjTenueGrade(){
+    BuildPopupTenueGrade(){
         // Conteneur du popup
         let conteneur = NanoXBuild.DivFlexColumn()
         // Titre du popup
@@ -186,21 +186,66 @@ class ProgrammeTenueBuilder {
         let DivButtonTypeOfTenue = NanoXBuild.DivFlexRowSpaceEvenly()
         conteneur. appendChild(DivButtonTypeOfTenue)
         // Boutton Apprenti
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Apprenti(), this._ConstApprenti, this.ClickBuildViewOdjTenueApprenti.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Apprenti(), this._ConstApprenti, this.ClickAddTenueApprenti.bind(this)))
         // Boutton Compagnon
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Compagnon(), "Compagnon", this.BuildViewOdjTenueCompagnon.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Compagnon(), "Compagnon", this.ClickAddTenueCompagnon.bind(this)))
         // Boutton Maitre
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Maitre(), "Maitre", this.BuildViewOdjTenueMaitre.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Maitre(), "Maitre", this.ClickAddTenueMaitre.bind(this)))
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
     }
 
-    
+    SaveDataProgramme(){
+        this._DataProgramme.Date = document.getElementById("InputDate").value
+        this._DataProgramme.Conge = document.getElementById("Conge").checked
+        this._DataProgramme.Temple = document.getElementById("InputTemple").value
+        this._DataProgramme.Rite = document.getElementById("InputRite").value
+        this._DataProgramme.Repas = document.getElementById("InputRepas").value
+        this._DataProgramme.Seminaire.Type = document.getElementById("inputSeminaireType").value
+        this._DataProgramme.Seminaire.Local = document.getElementById("inputSeminaireLocal").value
+        this._DataProgramme.Publish = document.getElementById("Publish").checked
+    }
 
-    
-
-    BuildViewOdjTenueCompagnon(){
+    ClickAddTenueApprenti(){
+        // Delete popup
         NanoXBuild.PopupDelete()
+        // Add Tenue Apprenti
+        this.AddModifyTenueApprenti()
+    }
+
+    AddModifyTenueApprenti(Tenue = null){
+        // Save Data Programme
+        this.SaveDataProgramme()
+        // Create tenue apprenti
+        if (Tenue == null){
+            let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenue.bind(this))
+        } else {
+            this._DataTenue = Tenue
+            this._IndexOfUpdatedTenue = this._DataProgramme.OrdreDuJour.indexOf(Tenue)
+            let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenue.bind(this), Tenue)
+        }
+    }
+
+    ClickAddTenueCompagnon(){
+        NanoXBuild.PopupDelete()
+        // Add Tenue Apprenti
+        this.AddModifyTenueCompagnon()
+    }
+
+    AddModifyTenueCompagnon(Tenue = null){
+        // Save Data Programme
+        this.SaveDataProgramme()
+        // Create tenue apprenti
+        if (Tenue == null){
+            // ToDo
+            //let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenue.bind(this))
+        } else {
+            this._DataTenue = Tenue
+            this._IndexOfUpdatedTenue = this._DataProgramme.OrdreDuJour.indexOf(Tenue)
+            // ToDo
+            //let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenue.bind(this), Tenue)
+        }
+
         // // Conteneur du popup
         // let conteneur = NanoXBuild.DivFlexColumn()
         // // Titre du popup
@@ -225,8 +270,26 @@ class ProgrammeTenueBuilder {
         // NanoXBuild.PopupCreate(conteneur)
     }
 
-    BuildViewOdjTenueMaitre(){
+    ClickAddTenueMaitre(){
         NanoXBuild.PopupDelete()
+        // Add Tenue Apprenti
+        this.AddModifyTenueMaitre()
+    }
+
+    AddModifyTenueMaitre(Tenue = null){
+        // Save Data Programme
+        this.SaveDataProgramme()
+        // Create tenue apprenti
+        if (Tenue == null){
+            // ToDo
+            //let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenue.bind(this))
+        } else {
+            this._DataTenue = Tenue
+            this._IndexOfUpdatedTenue = this._DataProgramme.OrdreDuJour.indexOf(Tenue)
+            // ToDo
+            //let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenue.bind(this), Tenue)
+        }
+
         // // Conteneur du popup
         // let conteneur = NanoXBuild.DivFlexColumn()
         // // Titre du popup
@@ -247,50 +310,19 @@ class ProgrammeTenueBuilder {
         // NanoXBuild.PopupCreate(conteneur)
     }
 
-    OnChangeToogleConge(event){
-        let conteneurinfo = document.getElementById(this._Idconteneurinfo)
-        if (event.target.checked){
-            conteneurinfo.style.display = "none"
-        } else {
-            conteneurinfo.style.display = "flex"
+    CallBackAddTenue(Tenue){
+        if (Tenue != null){
+            if (this._IndexOfUpdatedTenue == null){
+                this._DataProgramme.OrdreDuJour.push(Tenue)
+            } else {
+                this._DataProgramme.OrdreDuJour[this._IndexOfUpdatedTenue]= Tenue
+            }
         }
+        this.ViewNewProgrammeTenue(this._DataProgramme)
     }
 
     ClickSaveTenue(){
         alert("Save Tenue") // ToDo
         this._ButtonActionCancel()
-    }
-
-    ClickBuildViewOdjTenueApprenti(){
-        // Delete popup
-        NanoXBuild.PopupDelete()
-        // Save Data Programme
-        this.SaveDataProgramme()
-        // Clear view
-        this._DivApp.innerHTML=""
-        // Create tenue apprenti
-        let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenueApprenti.bind(this))
-    }
-
-    SaveDataProgramme(){
-        this._DataProgramme.Date = document.getElementById("InputDate").value
-        this._DataProgramme.Conge = document.getElementById("Conge").checked
-        this._DataProgramme.Temple = document.getElementById("InputTemple").value
-        this._DataProgramme.Rite = document.getElementById("InputRite").value
-        this._DataProgramme.Repas = document.getElementById("InputRepas").value
-        this._DataProgramme.Seminaire.Type = document.getElementById("inputSeminaireType").value
-        this._DataProgramme.Seminaire.Local = document.getElementById("inputSeminaireLocal").value
-        this._DataProgramme.Publish = document.getElementById("Publish").checked
-    }
-
-    CallBackAddTenueApprenti(Tenue){
-        if (Tenue != null){
-            if (this._IndexOfUpdatedElement == null){
-                this._DataProgramme.OrdreDuJour.push(Tenue)
-            } else {
-                this._DataProgramme.OrdreDuJour[this._IndexOfUpdatedElement]= Tenue
-            }
-        }
-        this.ViewNewProgrammeTenue(this._DataProgramme)
     }
 }

@@ -1,22 +1,25 @@
 class ProgrammeOredredujour{
-    constructor(CallBack, IndexOfUpdatedElement){
+    constructor(CallBack, IndexOfUpdatedProgramme){
         this._DivApp = NanoXGetDivApp()
 
         this._CallBack = CallBack
-        this._IndexOfUpdatedElement = IndexOfUpdatedElement
+        this._IndexOfUpdatedProgramme = IndexOfUpdatedProgramme
 
         this._ListeOrateur = []
-        
     }
 
     static ConstMorceauArchitecture(){return "MorceauArchitecture"}
+    static ConstDossier(){return "Dossier"}
+    static ConstBandeau(){return "Bandeau"}
+    static ConstAugmSalaire(){return "AugmSalaire"}
+    static ConstAdmin(){return "Administrative"}
+    static ConstAutre(){return "Autre"}
 
-    Show(Type = "", Data = {}){
+    Show(Type = "", Programme = {}){
         switch (Type) {
             case ProgrammeOredredujour.ConstMorceauArchitecture():
-                this.ShowMorceauArchitecture(Data)
+                this.ShowMorceauArchitecture(Programme)
                 break;
-        
             default:
                 alert("Type of Programme not found: " + Type)
                 break;
@@ -117,11 +120,11 @@ class ProgrammeOredredujour{
                 Valide: document.getElementById("InputValide").checked,
                 ListeOrateur: ListeOrateur
             }
-            this._CallBack(Data, this._IndexOfUpdatedElement)
+            this._CallBack(Data, this._IndexOfUpdatedProgramme)
         }
     }
 
     ClickCancel(){
-        this._CallBack(null, this._IndexOfUpdatedElement )
+        this._CallBack(null, this._IndexOfUpdatedProgramme )
     }
 }

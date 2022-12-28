@@ -41,10 +41,10 @@ class ProgrammeTenueApprenti{
         conteneur.appendChild(ListeOfProgramme)
         if(this._Tenue.Programme.length != 0){
             // Construire la liste de l'ordre du jour
-            this.BuildViewProgrammeCard(this._Tenue.Programme)
+            this.BuildCardProgramme(this._Tenue.Programme)
         }
         // Boutton Add Programme Apprenti
-        conteneur.appendChild(NanoXBuild.Button("Ajouter Programme", this.BuildViewPopupProgramme.bind(this), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
+        conteneur.appendChild(NanoXBuild.Button("Ajouter Programme", this.BuildPopupProgramme.bind(this), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
 
         // Save Cancel boutton
         let ConteneurAction = NanoXBuild.DivFlexRowSpaceEvenly(null, null, "width: 100%; margin-top: 1rem;")
@@ -56,9 +56,14 @@ class ProgrammeTenueApprenti{
         conteneur.appendChild(NanoXBuild.Div("", "", "height: 2rem;"))
     }
 
-    ClickSaveTenue(){
+    SaveDataTenue(){
         // Save Tenue numero
         this._Tenue.TenueNumero = document.getElementById("InputTenueNumero").value
+    }
+
+    ClickSaveTenue(){
+        // Save Data
+        this.SaveDataTenue()
         // Go to programme
         this._CallBack(this._Tenue)
     }
@@ -67,7 +72,7 @@ class ProgrammeTenueApprenti{
         this._CallBack(null)
     }
 
-    BuildViewPopupProgramme(){
+    BuildPopupProgramme(){
         // Conteneur du popup
         let conteneur = NanoXBuild.DivFlexColumn()
         // Titre du popup
@@ -76,23 +81,23 @@ class ProgrammeTenueApprenti{
         let DivButtonTypeOfTenue = NanoXBuild.DivFlexRowSpaceEvenly()
         conteneur. appendChild(DivButtonTypeOfTenue)
         // Boutton Morcheau Architecture
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.MorceauArchitecture(), "Morceau Architecture", this.ClickAddMorceauArchitecture.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.MorceauArchitecture(), "Morceau Architecture", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstMorceauArchitecture())))
         // Boutton Dossier
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Dossier(), "Dossier", this.ClickAddDossier.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Dossier(), "Dossier", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstDossier())))
         // Boutton Bandeau
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Bandeau(), "Bandeau", this.ClickAddBandeau.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Bandeau(), "Bandeau", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstBandeau())))
         // Boutton AugmSalaire
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.AugmSalaire(), "Augmentation Salaire", this.ClickAddAugmSalaire.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.AugmSalaire(), "Augmentation Salaire", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstAugmSalaire())))
         // Boutton Administrative
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Administrative(), "Administrative", this.ClickAddTenueAdministrative.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Administrative(), "Administrative", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstAdmin())))
         // Boutton Autre
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Autre(), "Autre", this.ClickAddTenueAutre.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Autre(), "Autre", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstAutre())))
 
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
     }
 
-    BuildViewProgrammeCard(ProgrammeApprenti){
+    BuildCardProgramme(ProgrammeApprenti){
         const ListeOfProgramme = document.getElementById(this._Idlisteordredujour)
         ProgrammeApprenti.forEach(element => {
             switch (element.Type) {
@@ -109,7 +114,7 @@ class ProgrammeTenueApprenti{
                     // Delete button
                     const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 3rem;")
                     conteneur.appendChild(conteneurBoutton)
-                    const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.ClickDeleteProgramme.bind(this, conteneur, element), null, "ButtonAction")
+                    const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteCardProgramme.bind(this, conteneur, element), null, "ButtonAction")
                     conteneurBoutton.appendChild(bouttonDelete)
                     // creation ordre du jour
                     ordredujour.appendChild(NanoXBuild.DivText("Morceau Architecture", null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
@@ -128,59 +133,37 @@ class ProgrammeTenueApprenti{
         });
     }
 
-    ClickDeleteProgramme(ConteneurProgramme, element){
+    DeleteCardProgramme(ConteneurProgramme, element){
         ConteneurProgramme.parentNode.removeChild(ConteneurProgramme)
         const index = this._Tenue.Programme.indexOf(element);
         this._Tenue.Programme.splice(index, 1);
     }
 
-    CallBackAddProgramme(Data, IndexOfUpdatedElement){
+    CallBackAddProgramme(Data, IndexOfUpdatedProgramme){
         if (Data != null){
-            if (IndexOfUpdatedElement == null){
+            if (IndexOfUpdatedProgramme == null){
                 this._Tenue.Programme.push(Data)
             } else {
-                this._Tenue.Programme[IndexOfUpdatedElement] = Data
+                this._Tenue.Programme[IndexOfUpdatedProgramme] = Data
             }
         }
         this.BuildViewTenueApprenti()
     }
 
-    ClickAddMorceauArchitecture(){
+    ClickAddProgramme(Type = null){
         NanoXBuild.PopupDelete()
-        this.BuildViewTenueMorceauArchitecture()
+        this.BuildViewProgramme(Type)
     }
 
-    ClickModifyMorceauArchitecture(element){
-        this.BuildViewTenueMorceauArchitecture(element, this._Tenue.Programme.indexOf(element))
+    ClickModifyMorceauArchitecture(Type, Programme){
+        this.BuildViewProgramme(Type, Programme, this._Tenue.Programme.indexOf(Programme))
     }
 
-    BuildViewTenueMorceauArchitecture(Data = {}, IndexOfUpdatedElement = null){
-        // Save Tenue numero
-        this._Tenue.TenueNumero = document.getElementById("InputTenueNumero").value
-        // Clear view
-        this._DivApp.innerHTML=""
+    BuildViewProgramme(Type = null, Programme = {}, IndexOfUpdatedProgramme = null){
+        // Save Data
+        this.SaveDataTenue()
         // Create view ordre du jour
-        let Oredredujour = new ProgrammeOredredujour(this.CallBackAddProgramme.bind(this), IndexOfUpdatedElement)
-        Oredredujour.Show(ProgrammeOredredujour.ConstMorceauArchitecture(), Data)
-    }
-
-    ClickAddDossier(){
-        //ToDo
-    }
-
-    ClickAddBandeau(){
-        // ToDo
-    }
-
-    ClickAddAugmSalaire(){
-        // ToDo
-    }
-
-    ClickAddTenueAdministrative(){
-        // ToDo
-    }
-
-    ClickAddTenueAutre(){
-        // ToDo
+        let Oredredujour = new ProgrammeOredredujour(this.CallBackAddProgramme.bind(this), IndexOfUpdatedProgramme)
+        Oredredujour.Show(Type, Programme)
     }
 }
