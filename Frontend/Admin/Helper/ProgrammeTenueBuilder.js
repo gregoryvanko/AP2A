@@ -129,12 +129,11 @@ class ProgrammeTenueBuilder {
         this._DataProgramme.OrdreDuJour.forEach(element => {
             const conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
             // Ordre du jour
-            const ordredujour = NanoXBuild.DivFlexColumn(null, "OredreDuJourResume", "width:88%;")
+            const ordredujour = NanoXBuild.DivFlexColumn(null, "Card", "width:88%;")
             ordredujour.style.cursor = 'pointer'
-            
             conteneur.appendChild(ordredujour)
             // Delete button
-            const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 3rem;")
+            const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 2.7rem;")
             conteneur.appendChild(conteneurBoutton)
             const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteCardOdj.bind(this, conteneur, element), null, "ButtonAction")
             conteneurBoutton.appendChild(bouttonDelete)

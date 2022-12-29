@@ -8,6 +8,8 @@ class ProgrammeTenueApprenti{
         this._ConstApprenti = "Apprenti"
         if (this._Tenue.TenueGrade == ""){this._Tenue.TenueGrade = this._ConstApprenti}
 
+        this._Idlisteordredujour = "listeordredujour"
+
         this.BuildViewTenueApprenti()
     }
 
@@ -104,24 +106,25 @@ class ProgrammeTenueApprenti{
                 case ProgrammeOredredujour.ConstMorceauArchitecture():
                     let conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
                     // Ordre du jour
-                    const ordredujour = NanoXBuild.DivFlexColumn(null, "OredreDuJourResume", "width:88%;")
+                    const ordredujour = NanoXBuild.DivFlexColumn(null, "Card", "width:88%;")
                     ordredujour.style.cursor = 'pointer'
-                    ordredujour.onclick = this.ClickModifyMorceauArchitecture.bind(this, element)
+                    ordredujour.onclick = this.ClickModifyMorceauArchitecture.bind(this, element.Type, element)
                     if (!element.Valide){
                         ordredujour.classList.add("BorderColorRed")
                     }
                     conteneur.appendChild(ordredujour)
                     // Delete button
-                    const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 3rem;")
+                    const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 2.7rem;")
                     conteneur.appendChild(conteneurBoutton)
                     const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteCardProgramme.bind(this, conteneur, element), null, "ButtonAction")
                     conteneurBoutton.appendChild(bouttonDelete)
                     // creation ordre du jour
                     ordredujour.appendChild(NanoXBuild.DivText("Morceau Architecture", null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
-                    ordredujour.appendChild(NanoXBuild.DivText("Titre: " + element.Titre, null, "Text", "width:100%"))
+                    ordredujour.appendChild(NanoXBuild.DivText("Titre: " + element.Titre, null, "TextSmall", "width:100%"))
                     element.ListeOrateur.forEach(elementorateur => {
-                        ordredujour.appendChild(NanoXBuild.DivText("Orateur: " + elementorateur.Nom, null, "Text", "width:100%"))
-                        ordredujour.appendChild(NanoXBuild.DivText("Loge: " + elementorateur.Loge, null, "Text", "width:100%"))
+                        ordredujour.appendChild(NanoXBuild.DivText("Orateur: " + elementorateur.Prenom + " " + elementorateur.Nom, null, "TextSmall", "width:100%"))
+                        let Atelier = (elementorateur.DeAtelier)? "De l'Atelier" : "de la R L: " + elementorateur.Loge
+                        ordredujour.appendChild(NanoXBuild.DivText("Loge: " + Atelier, null, "TextSmall", "width:100%"))
                     });
                     ListeOfProgramme.appendChild(conteneur)
                     break;
@@ -159,7 +162,7 @@ class ProgrammeTenueApprenti{
         this.BuildViewProgramme(Type, Programme, this._Tenue.Programme.indexOf(Programme))
     }
 
-    BuildViewProgramme(Type = null, Programme = {}, IndexOfUpdatedProgramme = null){
+    BuildViewProgramme(Type = null, Programme = null, IndexOfUpdatedProgramme = null){
         // Save Data
         this.SaveDataTenue()
         // Create view ordre du jour
