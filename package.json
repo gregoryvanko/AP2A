@@ -1,6 +1,6 @@
 {
   "name": "@gregvanko/ap2a",
-  "version": "1.31.0",
+  "version": "1.32.0",
   "description": "Ap2a",
   "main": "index.js",
   "scripts": {
