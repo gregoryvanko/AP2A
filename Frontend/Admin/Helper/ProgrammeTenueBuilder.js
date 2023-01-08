@@ -141,7 +141,7 @@ class ProgrammeTenueBuilder {
             switch (element.TenueGrade) {
                 case this._ConstApprenti:
                     ordredujour.onclick = this.AddModifyTenueApprenti.bind(this, element)
-                    let Titre = "A-" + element.TenueNumero
+                    let Titre = "Apprenti (A-" + element.TenueNumero + ")"
                     ordredujour.appendChild(NanoXBuild.DivText(Titre, null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
                     let valide = true
                     element.Programme.forEach(elementProgramme => {
@@ -150,11 +150,20 @@ class ProgrammeTenueBuilder {
                         switch (elementProgramme.Type) {
                             case ProgrammeOredredujour.ConstMorceauArchitecture():
                                 TitreProgramme = "Morc Archi : " + elementProgramme.Titre
-                                ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "Text", "width:100%;"))
+                                ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "TextSmall", "width:100%;"))
                                 break;
                             case ProgrammeOredredujour.ConstDossier():
                                 TitreProgramme = "Dossier : " + elementProgramme.ListeIntervenant.length + " profane(s)"
-                                ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "Text", "width:100%;"))
+                                ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "TextSmall", "width:100%;"))
+                                break;
+                            case ProgrammeOredredujour.ConstBandeau():
+                                TitreProgramme = "Bandeau : " + elementProgramme.ListeIntervenant.length + " profane(s)"
+                                ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "TextSmall", "width:100%;"))
+                                break;
+                            case ProgrammeOredredujour.ConstAugmSalaire():
+                                let TexteFrere = (elementProgramme.ListeIntervenant.length ==1)? " F de l'atelier" : " FF de l'atelier"
+                                TitreProgramme = "Augmentation de salaire : " + elementProgramme.ListeIntervenant.length + TexteFrere
+                                ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "TextSmall", "width:100%;"))
                                 break;
                             default:
                                 alert("Tenue Programme not found: " + elementProgramme.Type)
@@ -196,7 +205,7 @@ class ProgrammeTenueBuilder {
         // Boutton Maitre
         DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Maitre(), "Maitre", this.ClickAddTenueMaitre.bind(this)))
         // Boutton Administrative
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Administrative(), "Admini", this.ClickAddTenueadmin.bind(this)))
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Administrative(), "Admin", this.ClickAddTenueadmin.bind(this)))
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
     }

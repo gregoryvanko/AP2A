@@ -90,8 +90,6 @@ class ProgrammeTenueApprenti{
         DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Bandeau(), "Bandeau", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstBandeau())))
         // Boutton AugmSalaire
         DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.AugmSalaire(), "Augmentation Salaire", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstAugmSalaire())))
-        // Boutton Autre
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Autre(), "Autre", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstAutre())))
 
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
@@ -104,6 +102,7 @@ class ProgrammeTenueApprenti{
             // Ordre du jour
             const ordredujour = NanoXBuild.DivFlexColumn(null, "Card", "width:88%;")
             ordredujour.style.cursor = 'pointer'
+            ordredujour.onclick = this.ClickModifyProgramme.bind(this, element.Type, element)
             conteneur.appendChild(ordredujour)
             if (!element.Valide){
                 ordredujour.classList.add("BorderColorRed")
@@ -115,23 +114,37 @@ class ProgrammeTenueApprenti{
             conteneurBoutton.appendChild(bouttonDelete)
             switch (element.Type) {
                 case ProgrammeOredredujour.ConstMorceauArchitecture():
-                    ordredujour.onclick = this.ClickModifyProgramme.bind(this, element.Type, element)
-                    // creation ordre du jour
                     ordredujour.appendChild(NanoXBuild.DivText("Morceau Architecture", null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
-                    ordredujour.appendChild(NanoXBuild.DivText("Titre: " + element.Titre, null, "TextSmall", "width:100%"))
-                    element.ListeIntervenant.forEach(elementIntervenant => {
-                        ordredujour.appendChild(NanoXBuild.DivText("Orateur: " + elementIntervenant.Prenom + " " + elementIntervenant.Nom, null, "TextSmall", "width:100%"))
-                        let Atelier = (elementIntervenant.DeAtelier)? "De l'Atelier" : "de la R L: " + elementIntervenant.Loge
-                        ordredujour.appendChild(NanoXBuild.DivText("Loge: " + Atelier, null, "TextSmall", "width:100%"))
+                    ordredujour.appendChild(NanoXBuild.DivText("Titre: " + element.Titre, null, "TextSmall", "width:100%; margin-bottom:0.5rem"))
+                    element.ListeIntervenant.forEach((elementIntervenant, idx, array) => {
+                        ordredujour.appendChild(NanoXBuild.DivText(elementIntervenant.Prenom + " " + elementIntervenant.Nom, null, "TextSmall", "width:100%"))
+                        let Atelier = (elementIntervenant.DeAtelier)? "De l'Atelier" : "De la R L: " + elementIntervenant.Loge
+                        ordredujour.appendChild(NanoXBuild.DivText(Atelier, null, "TextSmall", "width:100%"))
+                        if (idx != array.length - 1){
+                            // Add space
+                            ordredujour.appendChild(NanoXBuild.Div(null, "", "height:0.5rem"))
+                        }
                     });
                     ListeOfProgramme.appendChild(conteneur)
                     break;
                 case ProgrammeOredredujour.ConstDossier():
-                    ordredujour.onclick = this.ClickModifyProgramme.bind(this, element.Type, element)
-                    // creation ordre du jour
                     ordredujour.appendChild(NanoXBuild.DivText("Dossier", null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
                     element.ListeIntervenant.forEach(elementIntervenant => {
                         ordredujour.appendChild(NanoXBuild.DivText("Profane: " + elementIntervenant.Prenom + " " + elementIntervenant.Nom, null, "TextSmall", "width:100%"))
+                    });
+                    ListeOfProgramme.appendChild(conteneur)
+                    break;
+                case ProgrammeOredredujour.ConstBandeau():
+                    ordredujour.appendChild(NanoXBuild.DivText("Bandeau", null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
+                    element.ListeIntervenant.forEach(elementIntervenant => {
+                        ordredujour.appendChild(NanoXBuild.DivText("Profane: " + elementIntervenant.Prenom + " " + elementIntervenant.Nom, null, "TextSmall", "width:100%"))
+                    });
+                    ListeOfProgramme.appendChild(conteneur)
+                    break;
+                case ProgrammeOredredujour.ConstAugmSalaire():
+                    ordredujour.appendChild(NanoXBuild.DivText("Augmentation de salaire", null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
+                    element.ListeIntervenant.forEach(elementIntervenant => {
+                        ordredujour.appendChild(NanoXBuild.DivText("Orateur: " + elementIntervenant.Prenom + " " + elementIntervenant.Nom, null, "TextSmall", "width:100%"))
                     });
                     ListeOfProgramme.appendChild(conteneur)
                     break;
