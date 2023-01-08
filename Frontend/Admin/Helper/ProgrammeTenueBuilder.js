@@ -146,9 +146,14 @@ class ProgrammeTenueBuilder {
                     let valide = true
                     element.Programme.forEach(elementProgramme => {
                         if (!elementProgramme.Valide){valide = false}
+                        let TitreProgramme = ""
                         switch (elementProgramme.Type) {
                             case ProgrammeOredredujour.ConstMorceauArchitecture():
-                                let TitreProgramme = "Morc Archi : " + elementProgramme.Titre
+                                TitreProgramme = "Morc Archi : " + elementProgramme.Titre
+                                ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "Text", "width:100%;"))
+                                break;
+                            case ProgrammeOredredujour.ConstDossier():
+                                TitreProgramme = "Dossier : " + elementProgramme.ListeIntervenant.length + " profane(s)"
                                 ordredujour.appendChild(NanoXBuild.DivText(TitreProgramme, null, "Text", "width:100%;"))
                                 break;
                             default:
@@ -190,6 +195,8 @@ class ProgrammeTenueBuilder {
         DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Compagnon(), "Compagnon", this.ClickAddTenueCompagnon.bind(this)))
         // Boutton Maitre
         DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Maitre(), "Maitre", this.ClickAddTenueMaitre.bind(this)))
+        // Boutton Administrative
+        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Administrative(), "Admini", this.ClickAddTenueadmin.bind(this)))
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur)
     }
@@ -307,6 +314,27 @@ class ProgrammeTenueBuilder {
 
         // // Creation du popup
         // NanoXBuild.PopupCreate(conteneur)
+    }
+
+    ClickAddTenueadmin(){
+        NanoXBuild.PopupDelete()
+        // Add Tenue Apprenti
+        this.AddModifyTenueAdmin()
+    }
+
+    AddModifyTenueAdmin(Tenue = null){
+        // Save Data Programme
+        this.SaveDataProgramme()
+        // Create tenue apprenti
+        if (Tenue == null){
+            // ToDo
+            //let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenue.bind(this))
+        } else {
+            this._DataTenue = Tenue
+            this._IndexOfUpdatedTenue = this._DataProgramme.OrdreDuJour.indexOf(Tenue)
+            // ToDo
+            //let TenueApprenti = new ProgrammeTenueApprenti(this.CallBackAddTenue.bind(this), Tenue)
+        }
     }
 
     CallBackAddTenue(Tenue){

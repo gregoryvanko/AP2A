@@ -5,10 +5,10 @@ class ProgrammeOredredujour{
         this._CallBack = CallBack
         this._IndexOfUpdatedProgramme = IndexOfUpdatedProgramme
 
-        this._ListeOrateur = []
-        this._IndexOfUpdatedOrateur = null
+        this._ListeIntervenant = []
+        this._IndexOfUpdatedIntervenant = null
 
-        this._IdconteneurOrateur = "conteneurOrateur"
+        this._IdconteneurIntervenant = "conteneurIntervenant"
         this._IdconteneurLoge = "conteneurLoge"
     }
 
@@ -24,6 +24,9 @@ class ProgrammeOredredujour{
             case ProgrammeOredredujour.ConstMorceauArchitecture():
                 this.ShowMorceauArchitecture(Programme)
                 break;
+            case ProgrammeOredredujour.ConstDossier():
+                this.ShowDossier(Programme)
+                break;
             default:
                 alert("Type of Programme not found: " + Type)
                 break;
@@ -36,12 +39,12 @@ class ProgrammeOredredujour{
 
     /* Morceau Architecture */
     ShowMorceauArchitecture(DataMorceauArchitecture = null){
-        if (DataMorceauArchitecture == null){ DataMorceauArchitecture = {Titre: "", Valide: false, ListeOrateur: []}}
-        this._ListeOrateur = DataMorceauArchitecture.ListeOrateur
+        if (DataMorceauArchitecture == null){ DataMorceauArchitecture = {Titre: "", Valide: false, ListeIntervenant: []}}
+        this._ListeIntervenant = DataMorceauArchitecture.ListeIntervenant
         // Clear view
         this._DivApp.innerHTML=""
-        // Clear liste of  updatede orateur
-        this._IndexOfUpdatedOrateur = null
+        // Clear liste of  updatede Intervenant
+        this._IndexOfUpdatedIntervenant = null
 
         // Conteneur
         let conteneur = NanoXBuild.DivFlexColumn(null, null, "width:100%; margin-bottom: 2rem; max-width: 35rem;")
@@ -50,14 +53,14 @@ class ProgrammeOredredujour{
         conteneur.appendChild(NanoXBuild.DivText("Morceau architecture", null, "Titre MarginTitre", "margin-bottom: 1rem; margin-top: 1rem; text-align: center;"))
         // Titre
         conteneur.appendChild(UiComponent.InputWithTitre("Titre:", "InputTitre", DataMorceauArchitecture.Titre, "24rem"))
-        // Liste Orateur
+        // Liste Intervenant
         conteneur.appendChild(NanoXBuild.DivText("Liste des orateurs", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem;"))
-        let conteneurOrateur = NanoXBuild.DivFlexColumn(this._IdconteneurOrateur, null, "width:100%;")
-        conteneur.appendChild(conteneurOrateur)
-        // Add orateur
-        this.BuildListofOrateur()
-        // Boutton Add Orateur
-        conteneur.appendChild(NanoXBuild.Button("Ajouter un orateur", this.BuildViewAddModifyOrateur.bind(this, null), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
+        let conteneurIntervenant = NanoXBuild.DivFlexColumn(this._IdconteneurIntervenant, null, "width:100%;")
+        conteneur.appendChild(conteneurIntervenant)
+        // Add Intervenant
+        this.BuildListofIntervenant()
+        // Boutton Add Intervenant
+        conteneur.appendChild(NanoXBuild.Button("Ajouter un orateur", this.BuildViewAddModifyIntervenant.bind(this, null, true), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
         
         // Valide
         conteneur.appendChild(NanoXBuild.DivText("Validation", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem;"))
@@ -73,72 +76,128 @@ class ProgrammeOredredujour{
     ClickSaveMorceauArchitecture(){
         const Titre = document.getElementById("InputTitre").value
 
-        if((Titre == "") || (this._ListeOrateur.length == 0)){
+        if((Titre == "") || (this._ListeIntervenant.length == 0)){
             // Popup error
-            let content = NanoXBuild.DivText("Erreur: remplir le numero et le titre", null, "Text", "color: red; text-align: center;")
+            let content = NanoXBuild.DivText("Erreur: remplir le titre et un orateur", null, "Text", "color: red; text-align: center;")
             NanoXBuild.PopupCreate(content)
         } else {
             let Data = {
                 Type: ProgrammeOredredujour.ConstMorceauArchitecture(),
                 Titre: Titre,  
                 Valide: document.getElementById("InputValide").checked,
-                ListeOrateur: this._ListeOrateur
+                ListeIntervenant: this._ListeIntervenant
             }
             this._CallBack(Data, this._IndexOfUpdatedProgramme)
         }
     }
 
-    /* Orateur */
-    BuildListofOrateur(){
-        let conteneurOrateur = document.getElementById(this._IdconteneurOrateur)
-        conteneurOrateur.innerHTML = ""
-        this._ListeOrateur.forEach(Orateur => {
+    /* Dossier */
+    ShowDossier(DataDossier = null){
+        if (DataDossier == null){ DataDossier = {Valide: false, ListeIntervenant: []}}
+        this._ListeIntervenant = DataDossier.ListeIntervenant
+
+        // Clear view
+        this._DivApp.innerHTML=""
+        // Clear liste of  updatede Profane
+        this._IndexOfUpdatedIntervenant = null
+
+        // Conteneur
+        let conteneur = NanoXBuild.DivFlexColumn(null, null, "width:100%; margin-bottom: 2rem; max-width: 35rem;")
+        this._DivApp.appendChild(conteneur)
+        // Titre
+        conteneur.appendChild(NanoXBuild.DivText("Dossier", null, "Titre MarginTitre", "margin-bottom: 1rem; margin-top: 1rem; text-align: center;"))
+        // Liste Profane
+        conteneur.appendChild(NanoXBuild.DivText("Liste des profanes", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem;"))
+        let conteneurIntervenant = NanoXBuild.DivFlexColumn(this._IdconteneurIntervenant, null, "width:100%;")
+        conteneur.appendChild(conteneurIntervenant)
+        // Add Intervenant
+        this.BuildListofIntervenant()
+        // Boutton Add Intervenant
+        conteneur.appendChild(NanoXBuild.Button("Ajouter un profane", this.BuildViewAddModifyIntervenant.bind(this, null, false), null, "Button MarginButton Text", "width: 15rem; margin-left: auto; margin-right: auto;")) 
+        
+        // Valide
+        conteneur.appendChild(NanoXBuild.DivText("Validation", null, "SousTitre", "width:100%; margin-bottom: 0.5rem; margin-top: 2rem;"))
+        conteneur.appendChild(UiComponent.InputWithToogle("Validé:", "InputValide", DataDossier.Valide))
+
+        // Save Cancel boutton
+        let ConteneurAction = NanoXBuild.DivFlexRowSpaceEvenly(null, null, "width: 100%; margin-top: 1rem;")
+        ConteneurAction.appendChild(NanoXBuild.Button("Save", this.ClickSaveDossier.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        ConteneurAction.appendChild(NanoXBuild.Button("Cancel", this.ClickCancel.bind(this), null, "Button MarginButton Text", "width: 6rem;"))
+        conteneur.appendChild(ConteneurAction)
+    }
+
+    ClickSaveDossier(){
+        if(this._ListeIntervenant.length == 0){
+            // Popup error
+            let content = NanoXBuild.DivText("Erreur: ajouter un profane", null, "Text", "color: red; text-align: center;")
+            NanoXBuild.PopupCreate(content)
+        } else {
+            let Data = {
+                Type: ProgrammeOredredujour.ConstDossier(), 
+                Valide: document.getElementById("InputValide").checked,
+                ListeIntervenant: this._ListeIntervenant
+            }
+            this._CallBack(Data, this._IndexOfUpdatedProgramme)
+        }
+    }
+
+    /* Intervenant */
+    BuildListofIntervenant(){
+        let conteneurIntervenant = document.getElementById(this._IdconteneurIntervenant)
+        conteneurIntervenant.innerHTML = ""
+        this._ListeIntervenant.forEach(Intervenant => {
             const conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
-            // Ordre du jour
+            // Card intervenant
             const Card = NanoXBuild.DivFlexColumn(null, "Card", "width:88%;")
             conteneur.appendChild(Card)
             Card.style.cursor = 'pointer'
-            Card.onclick = this.BuildViewAddModifyOrateur.bind(this, Orateur)
-            let PrenomNom = Orateur.Prenom + " " + Orateur.Nom
+            Card.onclick = this.BuildViewAddModifyIntervenant.bind(this, Intervenant)
+            let PrenomNom = Intervenant.Prenom + " " + Intervenant.Nom
             Card.appendChild(NanoXBuild.DivText(PrenomNom, null, "TextSmall", "width:100%; margin: 0.2rem 0 0.2rem 0;"))
-            let Atelier = (Orateur.DeAtelier)? "De l'Atelier" : "de la R L: " + Orateur.Loge
-            Card.appendChild(NanoXBuild.DivText(Atelier, null, "TextSmall", "width:100%; margin: 0.2rem 0 0.2rem 0;"))
+            if(Intervenant.Macon){
+                let Atelier = (Intervenant.DeAtelier)? "De l'Atelier" : "de la R L: " + Intervenant.Loge
+                Card.appendChild(NanoXBuild.DivText(Atelier, null, "TextSmall", "width:100%; margin: 0.2rem 0 0.2rem 0;"))
+            }
             // Delete button
             const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 2.7rem;")
             conteneur.appendChild(conteneurBoutton)
-            const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteCardOrateur.bind(this, conteneur, Orateur), null, "ButtonAction")
+            const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteCardIntervenant.bind(this, conteneur, Intervenant), null, "ButtonAction")
             conteneurBoutton.appendChild(bouttonDelete)
-            // ajout au conteneur orateur
-            conteneurOrateur.appendChild(conteneur)
+            // ajout au conteneur
+            conteneurIntervenant.appendChild(conteneur)
         });
     }
 
-    DeleteCardOrateur(Conteneur, Orateur){
+    DeleteCardIntervenant(Conteneur, Intervenant){
         Conteneur.parentNode.removeChild(Conteneur)
-        const index = this._ListeOrateur.indexOf(Orateur);
-        this._ListeOrateur.splice(index, 1);
+        const index = this._ListeIntervenant.indexOf(Intervenant);
+        this._ListeIntervenant.splice(index, 1);
     }
 
-    BuildViewAddModifyOrateur(Orateur = null){
-        if (Orateur == null){ 
-            Orateur = {Nom:"", Prenom:"", Loge:"", DeAtelier: true}
+    BuildViewAddModifyIntervenant(Intervenant = null, Macon = true){
+        if (Intervenant == null){ 
+            Intervenant = {Nom:"", Prenom:"", Macon: Macon, Loge:"", DeAtelier: true}
         } else {
-            this._IndexOfUpdatedOrateur = this._ListeOrateur.indexOf(Orateur)
+            this._IndexOfUpdatedIntervenant = this._ListeIntervenant.indexOf(Intervenant)
+            Macon = Intervenant.Macon
         }
         // Conteneur
         let conteneur = NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-top: 1rem;")
-        // Orateur Prénom
-        conteneur.appendChild(UiComponent.InputWithTitre("Prénom:", "InputOrateurPrenom", Orateur.Prenom, "19rem"))
-        // Orateur Nom
-        conteneur.appendChild(UiComponent.InputWithTitre("Nom:", "InputOrateurNom", Orateur.Nom, "19rem"))
-        // De l'Atelier
-        conteneur.appendChild(UiComponent.InputWithToogle("De l'Atelier:", "DeAtelier", Orateur.DeAtelier, this.OnChangeToogleDeAtelier.bind(this)))
-        // Orateur Loge
-        let conteneurLoge = NanoXBuild.Div(this._IdconteneurLoge, null, "display: none; flex-direction: column; width:100%;")
-        conteneur.appendChild(conteneurLoge)
-        conteneurLoge.appendChild(UiComponent.InputWithTitre("Loge:", "InputOrateurLoge", Orateur.Loge, "19rem"))
+        // Intervenant Prénom
+        conteneur.appendChild(UiComponent.InputWithTitre("Prénom:", "InputIntervenantPrenom", Intervenant.Prenom, "19rem"))
+        // Intervenant Nom
+        conteneur.appendChild(UiComponent.InputWithTitre("Nom:", "InputIntervenantNom", Intervenant.Nom, "19rem"))
+        // Si l'intervenant est maçon
+        if (Macon){
+            // De l'Atelier
+            conteneur.appendChild(UiComponent.InputWithToogle("De l'Atelier:", "DeAtelier", Intervenant.DeAtelier, this.OnChangeToogleDeAtelier.bind(this)))
+            // Loge
+            let conteneurLoge = NanoXBuild.Div(this._IdconteneurLoge, null, "display: none; flex-direction: column; width:100%;")
+            conteneur.appendChild(conteneurLoge)
+            conteneurLoge.appendChild(UiComponent.InputWithTitre("Loge:", "InputIntervenantLoge", Intervenant.Loge, "19rem"))
+        }
         // Save Cancel boutton
-        const ListOfButton = [{Titre: "Save", Action: this.SaveOrateur.bind(this), Id: null}, {Titre: "Cancel", Action: NanoXBuild.PopupDelete, Id: null}]
+        const ListOfButton = [{Titre: "Save", Action: this.SaveIntervenant.bind(this, Macon), Id: null}, {Titre: "Cancel", Action: NanoXBuild.PopupDelete, Id: null}]
         // Creation du popup
         NanoXBuild.PopupCreate(conteneur, ListOfButton)
     }
@@ -152,24 +211,29 @@ class ProgrammeOredredujour{
         }
     }
 
-    SaveOrateur(){
-        // Creation orateur
-        let Orateur = {
-            Prenom: document.getElementById("InputOrateurPrenom").value,
-            Nom: document.getElementById("InputOrateurNom").value, 
-            Loge: document.getElementById("InputOrateurLoge").value, 
+    SaveIntervenant(Macon = true){
+        // Creation Intervenant
+        let Intervenant = (Macon)? {
+            Prenom: document.getElementById("InputIntervenantPrenom").value,
+            Nom: document.getElementById("InputIntervenantNom").value, 
+            Macon: Macon,
+            Loge: document.getElementById("InputIntervenantLoge").value, 
             DeAtelier: document.getElementById("DeAtelier").checked
+        }: {
+            Prenom: document.getElementById("InputIntervenantPrenom").value,
+            Nom: document.getElementById("InputIntervenantNom").value,
+            Macon : Macon
         }
         // Supprimer le popup
         NanoXBuild.PopupDelete()
-        // Ajouter l'orateur à la liste
-        if (this._IndexOfUpdatedOrateur == null){
-            this._ListeOrateur.push(Orateur)
+        // Ajouter l'Intervenant à la liste
+        if (this._IndexOfUpdatedIntervenant == null){
+            this._ListeIntervenant.push(Intervenant)
         } else {
-            this._ListeOrateur[this._IndexOfUpdatedOrateur]= Orateur
-            this._IndexOfUpdatedOrateur = null
+            this._ListeIntervenant[this._IndexOfUpdatedIntervenant]= Intervenant
+            this._IndexOfUpdatedIntervenant = null
         }
-        // Affichier la liste des orateurs
-        this.BuildListofOrateur()
+        // Affichier la liste des Intervenants
+        this.BuildListofIntervenant()
     }
 }

@@ -90,8 +90,6 @@ class ProgrammeTenueApprenti{
         DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Bandeau(), "Bandeau", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstBandeau())))
         // Boutton AugmSalaire
         DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.AugmSalaire(), "Augmentation Salaire", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstAugmSalaire())))
-        // Boutton Administrative
-        DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Administrative(), "Administrative", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstAdmin())))
         // Boutton Autre
         DivButtonTypeOfTenue.appendChild(UiComponent.ButtonSvgAndTitre(IconTypeTenue.Autre(), "Autre", this.ClickAddProgramme.bind(this, ProgrammeOredredujour.ConstAutre())))
 
@@ -102,33 +100,41 @@ class ProgrammeTenueApprenti{
     BuildCardProgramme(ProgrammeApprenti){
         const ListeOfProgramme = document.getElementById(this._Idlisteordredujour)
         ProgrammeApprenti.forEach(element => {
+            let conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
+            // Ordre du jour
+            const ordredujour = NanoXBuild.DivFlexColumn(null, "Card", "width:88%;")
+            ordredujour.style.cursor = 'pointer'
+            conteneur.appendChild(ordredujour)
+            if (!element.Valide){
+                ordredujour.classList.add("BorderColorRed")
+            }
+            // Delete button
+            const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 2.7rem;")
+            conteneur.appendChild(conteneurBoutton)
+            const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteCardProgramme.bind(this, conteneur, element), null, "ButtonAction")
+            conteneurBoutton.appendChild(bouttonDelete)
             switch (element.Type) {
                 case ProgrammeOredredujour.ConstMorceauArchitecture():
-                    let conteneur =  NanoXBuild.DivFlexRowSpaceBetween(null, null, "width:100%; margin-bottom: 1rem;")
-                    // Ordre du jour
-                    const ordredujour = NanoXBuild.DivFlexColumn(null, "Card", "width:88%;")
-                    ordredujour.style.cursor = 'pointer'
-                    ordredujour.onclick = this.ClickModifyMorceauArchitecture.bind(this, element.Type, element)
-                    if (!element.Valide){
-                        ordredujour.classList.add("BorderColorRed")
-                    }
-                    conteneur.appendChild(ordredujour)
-                    // Delete button
-                    const conteneurBoutton = NanoXBuild.DivFlexColumn(null, null, "width:11%; max-width: 2.7rem;")
-                    conteneur.appendChild(conteneurBoutton)
-                    const bouttonDelete = NanoXBuild.Button(IconAction.Delete(), this.DeleteCardProgramme.bind(this, conteneur, element), null, "ButtonAction")
-                    conteneurBoutton.appendChild(bouttonDelete)
+                    ordredujour.onclick = this.ClickModifyProgramme.bind(this, element.Type, element)
                     // creation ordre du jour
                     ordredujour.appendChild(NanoXBuild.DivText("Morceau Architecture", null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
                     ordredujour.appendChild(NanoXBuild.DivText("Titre: " + element.Titre, null, "TextSmall", "width:100%"))
-                    element.ListeOrateur.forEach(elementorateur => {
-                        ordredujour.appendChild(NanoXBuild.DivText("Orateur: " + elementorateur.Prenom + " " + elementorateur.Nom, null, "TextSmall", "width:100%"))
-                        let Atelier = (elementorateur.DeAtelier)? "De l'Atelier" : "de la R L: " + elementorateur.Loge
+                    element.ListeIntervenant.forEach(elementIntervenant => {
+                        ordredujour.appendChild(NanoXBuild.DivText("Orateur: " + elementIntervenant.Prenom + " " + elementIntervenant.Nom, null, "TextSmall", "width:100%"))
+                        let Atelier = (elementIntervenant.DeAtelier)? "De l'Atelier" : "de la R L: " + elementIntervenant.Loge
                         ordredujour.appendChild(NanoXBuild.DivText("Loge: " + Atelier, null, "TextSmall", "width:100%"))
                     });
                     ListeOfProgramme.appendChild(conteneur)
                     break;
-            
+                case ProgrammeOredredujour.ConstDossier():
+                    ordredujour.onclick = this.ClickModifyProgramme.bind(this, element.Type, element)
+                    // creation ordre du jour
+                    ordredujour.appendChild(NanoXBuild.DivText("Dossier", null, "Text", "width:100%; color: var(--NanoX-appcolor);"))
+                    element.ListeIntervenant.forEach(elementIntervenant => {
+                        ordredujour.appendChild(NanoXBuild.DivText("Profane: " + elementIntervenant.Prenom + " " + elementIntervenant.Nom, null, "TextSmall", "width:100%"))
+                    });
+                    ListeOfProgramme.appendChild(conteneur)
+                    break;
                 default:
                     alert("Programme type not found: " + element.Type)
                     break;
@@ -158,7 +164,7 @@ class ProgrammeTenueApprenti{
         this.BuildViewProgramme(Type)
     }
 
-    ClickModifyMorceauArchitecture(Type, Programme){
+    ClickModifyProgramme(Type, Programme){
         this.BuildViewProgramme(Type, Programme, this._Tenue.Programme.indexOf(Programme))
     }
 
